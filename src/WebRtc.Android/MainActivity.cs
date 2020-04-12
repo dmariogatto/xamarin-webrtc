@@ -47,9 +47,7 @@ namespace WebRtc.Android
             waveButton.Click += (sender, args) => _webRtcClient.SendMessage(waveButton.Text);
 
             _remoteView = FindViewById<SurfaceViewRenderer>(Resource.Id.remote_video_view);
-            _localView = FindViewById<SurfaceViewRenderer>(Resource.Id.local_video_view);
-
-            _webRtcClient = new WebRtcClient(this, _remoteView, _localView, this);
+            _localView = FindViewById<SurfaceViewRenderer>(Resource.Id.local_video_view);            
 
             RunOnUiThread(async () => await Init());
         }
@@ -58,6 +56,8 @@ namespace WebRtc.Android
         {
             var cameraStatus = await Permissions.RequestAsync<Permissions.Camera>();
             var micStatus = await Permissions.RequestAsync<Permissions.Microphone>();
+
+            _webRtcClient = new WebRtcClient(this, _remoteView, _localView, this);
 
             var dialogTcs = new TaskCompletionSource<string>();
 
