@@ -1,0 +1,49 @@
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_main">
+
+    <LinearLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/connect_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Connect"/>
+        <Button
+            android:id="@+id/wave_button"
+            android:layout_width="wrap_content"            
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/disconnect_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"           
+            android:text="Disconnect" />
+    </LinearLayout>
+
+    <org.webrtc.SurfaceViewRenderer
+        android:id="@+id/remote_video_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_layout"/>
+
+    <org.webrtc.SurfaceViewRenderer
+        android:id="@+id/local_video_view"
+        android:layout_width="128dp"
+        android:layout_height="72dp"
+        android:layout_above="@id/bottom_layout"/>
+
+</RelativeLayout>
