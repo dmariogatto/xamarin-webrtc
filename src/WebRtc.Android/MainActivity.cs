@@ -70,7 +70,7 @@ namespace WebRtc.Android
             linearLayout.AddView(port);
 
             var alert = new AlertDialog.Builder(this)
-                .SetTitle("Web Socket")
+                .SetTitle("Socket Address")
                 .SetView(linearLayout)
                 .SetPositiveButton("OK", (sender, args) =>
                 {

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Linq;
 using AVFoundation;
+using Cirrious.FluentLayouts.Touch;
 using CoreFoundation;
 using CoreGraphics;
 using CoreMedia;
 using Foundation;
+using Google.iOS.WebRtc;
 using UIKit;
 using Xamarin.Essentials;
-using Google.iOS.WebRtc;
 
 namespace WebRtc.iOS.Code
 {
@@ -29,11 +30,13 @@ namespace WebRtc.iOS.Code
         private RTCVideoCapturer _videoCapturer;
         private RTCVideoTrack _localVideoTrack;
         private RTCAudioTrack _localAudioTrack;
+        
+        private RTCMediaStream _remoteStream;
+
         private RTCEAGLVideoView _localRenderView;
         private UIView _localView;
         private RTCEAGLVideoView _remoteRenderView;
         private UIView _remoteView;
-        private RTCMediaStream _remoteStream;
 
         private readonly object _connectionLock = new object();
         private RTCPeerConnection _peerConnection;
@@ -41,7 +44,6 @@ namespace WebRtc.iOS.Code
 
         private bool _isConnected;
 
-        private (bool video, bool audio, bool dataChannel) _channels = (false, false, false);
         private (RTCPeerConnection peer, RTCDataChannel data) _connection
         {
             get
@@ -71,15 +73,8 @@ namespace WebRtc.iOS.Code
         public WebRtcClient(IWebRtcClientDelegate @delegate)
         {
             Delegate = @delegate;
-        }
 
-        public void Init(bool videoTrack, bool audioTrack, bool dataChannel)
-        {
-            _channels.video = videoTrack;
-            _channels.audio = audioTrack;
-            _channels.dataChannel = dataChannel;
-
-            // will crash on simulator... device?
+            // will crash on simulator... device is fine
             //var metalView = new RTCMTLVideoView();
 
             var videoEncoderFactory = new RTCDefaultVideoEncoderFactory();
@@ -94,23 +89,35 @@ namespace WebRtc.iOS.Code
             _remoteRenderView = new RTCEAGLVideoView();
             _remoteRenderView.Delegate = this;
             _remoteView = new UIView();
-            _remoteView.AddSubview(_remoteRenderView);            
+            _remoteView.AddSubview(_remoteRenderView);
+
+            _localView.SubviewsDoNotTranslateAutoresizingMaskIntoConstraints();
+            _localView.AddConstraints(new[]
+            {
+                _localRenderView.WithSameCenterX(_localView),
+                _localRenderView.WithSameCenterY(_localView),
+                _localRenderView.WithSameHeight(_localView),
+                _localRenderView.WithSameWidth(_localView)
+            });
+
+            _remoteView.SubviewsDoNotTranslateAutoresizingMaskIntoConstraints();
+            _remoteView.AddConstraints(new[]
+            {
+                _remoteRenderView.WithSameCenterX(_remoteView),
+                _remoteRenderView.WithSameCenterY(_remoteView),
+                _remoteRenderView.WithSameHeight(_remoteView),
+                _remoteRenderView.WithSameWidth(_remoteView)
+            });
         }
 
         public void SetupMediaTracks()
         {
-            if (_channels.video)
-            {
-                _localVideoTrack = CreateVideoTrack();
+            _localVideoTrack = CreateVideoTrack();
 
-                StartCaptureLocalVideo(AVCaptureDevicePosition.Front, 640, Convert.ToInt32(640 * 16 / 9f), 30);
-                _localVideoTrack.AddRenderer(_localRenderView);
-            }
+            StartCaptureLocalVideo(AVCaptureDevicePosition.Front, 640, Convert.ToInt32(640 * 16 / 9f), 30);
+            _localVideoTrack.AddRenderer(_localRenderView);
 
-            if (_channels.audio)
-            {
-                _localAudioTrack = CreateAudioTrack();
-            }
+            _localAudioTrack = CreateAudioTrack();
         }
 
         public void Connect(Action<RTCSessionDescription, NSError> completionHandler)
@@ -192,15 +199,8 @@ namespace WebRtc.iOS.Code
             var mediaConstraints = new RTCMediaConstraints(null, null);
             var pc = _peerConnectionFactory.PeerConnectionWithConfiguration(rtcConfig, mediaConstraints, this);
 
-            if (_channels.video)
-            {
-                pc.AddTrack(_localVideoTrack, new[] { "stream0" });
-            }
-
-            if (_channels.audio)
-            {
-                pc.AddTrack(_localAudioTrack, new[] { "stream0" });
-            }            
+            pc.AddTrack(_localVideoTrack, new[] { "stream0" });
+            pc.AddTrack(_localAudioTrack, new[] { "stream0" });
 
             return pc;
         }
@@ -359,18 +359,35 @@ namespace WebRtc.iOS.Code
             if (videoView is RTCEAGLVideoView rendererView &&
                 rendererView.Superview is UIView parentView)
             {
-                var isLandscape = size.Width < size.Height;
+                var constraints = parentView.Constraints
+                    .Where(lc => lc.SecondAttribute == NSLayoutAttribute.Width ||
+                                 lc.SecondAttribute == NSLayoutAttribute.Height)
+                    .ToArray();
+                parentView.RemoveConstraints(constraints);
+
+                var isLandscape = size.Width > size.Height;
+
                 if (isLandscape)
-                {
-                    var ratio = size.Width / size.Height;
-                    rendererView.Frame = new CGRect(0, 0, parentView.Frame.Height * ratio, parentView.Frame.Height);
-                    rendererView.Center = new CGPoint(parentView.Frame.Width / 2, rendererView.Center.Y);
+                {                    
+                    parentView.AddConstraints(new[]
+                    {
+                        rendererView.WithSameWidth(parentView),
+                        rendererView.Height()
+                                    .EqualTo()
+                                    .WidthOf(parentView)
+                                    .WithMultiplier(size.Height / size.Width)
+                    });
                 }
                 else
                 {
-                    var ratio = size.Height / size.Width;
-                    rendererView.Frame = new CGRect(0, 0, parentView.Frame.Width, parentView.Frame.Width * ratio);
-                    rendererView.Center = new CGPoint(rendererView.Center.X, parentView.Frame.Height / 2);
+                    parentView.AddConstraints(new[]
+                    {
+                        rendererView.Width()
+                                    .EqualTo()
+                                    .HeightOf(parentView)
+                                    .WithMultiplier(size.Width / size.Height),
+                        rendererView.WithSameHeight(parentView)
+                    });
                 }
             }
                         

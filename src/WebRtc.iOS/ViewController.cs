@@ -1,28 +1,27 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Cirrious.FluentLayouts.Touch;
 using CoreFoundation;
 using Foundation;
+using Google.iOS.WebRtc;
 using Newtonsoft.Json;
 using Square.SocketRocket;
 using UIKit;
 using WebRtc.iOS.Code;
 using Xamarin.Essentials;
-using Google.iOS.WebRtc;
 
 namespace WebRtc.iOS
 {
-    public partial class ViewController : UIViewController, IWebRtcClientDelegate
+    public class ViewController : UIViewController, IWebRtcClientDelegate
     {
         private readonly WebRtcClient _webRtcClient;
 
         private WebSocket _socket;
 
-        public ViewController(IntPtr handle) : base(handle)
+        public ViewController()
         {
+            View.BackgroundColor = ColorHelper.SystemBackgroundColor;
+
             _webRtcClient = new WebRtcClient(this);
-            
-            _webRtcClient.Init(true, true, true);
         }
 
         public override void ViewDidLoad()
@@ -68,7 +67,7 @@ namespace WebRtc.iOS
 
             videoContainer.SubviewsDoNotTranslateAutoresizingMaskIntoConstraints();
             controlsContainer.SubviewsDoNotTranslateAutoresizingMaskIntoConstraints();
-            View.SubviewsDoNotTranslateAutoresizingMaskIntoConstraints();
+            View.SubviewsDoNotTranslateAutoresizingMaskIntoConstraints();           
 
             videoContainer.AddConstraints(new[]
             {
@@ -80,7 +79,10 @@ namespace WebRtc.iOS
                 localVideoView.WithSameLeft(videoContainer),
                 localVideoView.WithSameBottom(videoContainer),
                 localVideoView.WithRelativeHeight(videoContainer, 0.25f),
-                localVideoView.WithRelativeWidth(videoContainer, 0.25f * 16 / 9f),
+                localVideoView.Width()
+                              .EqualTo()
+                              .HeightOf(videoContainer)
+                              .WithMultiplier(0.25f * 16 / 9f),
             });
 
             controlsContainer.AddConstraints(new[]
@@ -105,7 +107,7 @@ namespace WebRtc.iOS
 
                 controlsContainer.WithSameBottom(View),
                 controlsContainer.WithSameWidth(View),
-                controlsContainer.WithRelativeHeight(View, 0.25f),
+                controlsContainer.WithRelativeHeight(View, 0.20f),
             });
 
             DispatchQueue.MainQueue.DispatchAsync(async () =>
@@ -149,6 +151,11 @@ namespace WebRtc.iOS
 
         private void ConnectButton_TouchUpInside(object sender, EventArgs e)
         {
+            if (_socket.ReadyState == ReadyState.Closed)
+            {
+                _socket.Open();
+            }
+
             _webRtcClient.Connect((sdp, err) =>
             {
                 if (err == null)
