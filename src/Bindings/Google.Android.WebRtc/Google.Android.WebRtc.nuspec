@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Google.Android.WebRtc</id>
+    <version>1.0.30039</version>
+    <title>Xamarin.Android bindings for WebRTC</title>
+    <authors>dmariogatto</authors>
+    <owners>dmariogatto</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <projectUrl>https://github.com/dmariogatto/xamarin-webrtc</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/dmariogatto/xamarin-webrtc/master/icons/google-webrtc_128.png</iconUrl>
+    <description>With WebRTC, you can add real-time communication capabilities to your application that works on top of an open standard.</description>
+    <copyright>© Google and Daniel Gatto</copyright>
+    <tags>Xamarin.Aandroid Google WebRTC Xamarin Android</tags>
+    <repository type="git" url="https://github.com/dmariogatto/xamarin-webrtc" />
+    <dependencies>
+      <group targetFramework="MonoAndroid70" />
+      <group targetFramework="MonoAndroid7.1" />
+      <group targetFramework="MonoAndroid8.0" />
+      <group targetFramework="MonoAndroid8.1" />
+      <group targetFramework="MonoAndroid9.0" />
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="Java.Interop" targetFramework="MonoAndroid9.0" />
+    </frameworkAssemblies>    
+  </metadata>
+  <files>
+    <file src="Content\_._" target="lib/monoandroid70" />
+    <file src="Content\_._" target="lib/monoandroid71" />
+    <file src="Content\_._" target="lib/monoandroid80" />
+    <file src="Content\_._" target="lib/monoandroid81" />
+  </files>
+</package>
