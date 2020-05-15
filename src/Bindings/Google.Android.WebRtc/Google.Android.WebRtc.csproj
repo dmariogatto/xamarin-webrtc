@@ -49,6 +49,8 @@
     <None Include="Jars\AboutJars.txt" />
     <None Include="Additions\AboutAdditions.txt" />
     <LibraryProjectZip Include="Jars\google-webrtc-1.0.30039.aar" />
+    <None Include="Google.Android.WebRtc.nuspec" />
+    <None Include="_._" />
   </ItemGroup>
   <ItemGroup>
     <TransformFile Include="Transforms\Metadata.xml" />
