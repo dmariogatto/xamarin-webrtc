@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30104.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Google.Android.WebRtc", "Google.Android.WebRtc\Google.Android.WebRtc.csproj", "{9748B17A-608C-4406-8CB4-D26D6122A480}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Google.iOS.WebRtc", "Google.iOS.WebRtc\Google.iOS.WebRtc.csproj", "{106FCE9C-C022-4696-9C38-F42BD9E18131}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9748B17A-608C-4406-8CB4-D26D6122A480}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9748B17A-608C-4406-8CB4-D26D6122A480}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9748B17A-608C-4406-8CB4-D26D6122A480}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9748B17A-608C-4406-8CB4-D26D6122A480}.Release|Any CPU.Build.0 = Release|Any CPU
+		{106FCE9C-C022-4696-9C38-F42BD9E18131}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{106FCE9C-C022-4696-9C38-F42BD9E18131}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{106FCE9C-C022-4696-9C38-F42BD9E18131}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{106FCE9C-C022-4696-9C38-F42BD9E18131}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6BA6BFF5-DA96-4F2C-9D1A-9235E6BD7FF7}
+	EndGlobalSection
+EndGlobal
