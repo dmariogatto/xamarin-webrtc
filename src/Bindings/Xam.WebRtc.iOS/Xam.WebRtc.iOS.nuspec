@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
-    <id>Google.iOS.WebRtc</id>
+    <id>Xam.WebRtc.iOS</id>
     <version>1.1.29400</version>
     <title>Xamarin.iOS bindings for WebRTC</title>
     <authors>dmariogatto</authors>
@@ -23,4 +23,7 @@
       <frameworkAssembly assemblyName="Xamarin.iOS" targetFramework="Xamarin.iOS1.0" />
     </frameworkAssemblies>
   </metadata>
+  <files>
+    <file src="bin\Release\Xam.WebRtc.iOS.dll" target="lib/xamarinios10" />
+  </files>
 </package>

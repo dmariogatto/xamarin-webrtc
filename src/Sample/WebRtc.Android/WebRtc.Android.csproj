@@ -108,14 +108,14 @@
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Google.Android.WebRtc">
-      <Version>1.0.30039</Version>
-    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
     <PackageReference Include="Square.OkHttp3">
       <Version>4.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="Xam.WebRtc.Android">
+      <Version>1.0.30039</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.Design" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Android.Support.Core.Utils" Version="28.0.0.3" />
