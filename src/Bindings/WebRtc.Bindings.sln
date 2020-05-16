@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Google.Android.WebRtc", "Google.Android.WebRtc\Google.Android.WebRtc.csproj", "{9748B17A-608C-4406-8CB4-D26D6122A480}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xam.WebRtc.Android", "Xam.WebRtc.Android\Xam.WebRtc.Android.csproj", "{9748B17A-608C-4406-8CB4-D26D6122A480}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Google.iOS.WebRtc", "Google.iOS.WebRtc\Google.iOS.WebRtc.csproj", "{106FCE9C-C022-4696-9C38-F42BD9E18131}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xam.WebRtc.iOS", "Xam.WebRtc.iOS\Xam.WebRtc.iOS.csproj", "{106FCE9C-C022-4696-9C38-F42BD9E18131}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

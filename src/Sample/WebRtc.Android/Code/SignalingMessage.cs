@@ -1,5 +1,4 @@
 ﻿using System;
-using Google.Android.WebRtc;
 
 namespace WebRtc.Android.Code
 {

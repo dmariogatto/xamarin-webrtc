@@ -11,11 +11,11 @@
         name="managedName">value</attr>
 
   <attr path="/api/package[@name='org.webrtc']"
-        name="managedName">Google.Android.WebRtc</attr>
+        name="managedName">Xam.WebRtc.Android</attr>
   <attr path="/api/package[@name='org.webrtc.audio']"
-        name="managedName">Google.Android.WebRtc.Audio</attr>
+        name="managedName">Xam.WebRtc.Android.Audio</attr>
   <attr path="/api/package[@name='org.webrtc.voiceengine']"
-        name="managedName">Google.Android.WebRtc.VoiceEngine</attr>
+        name="managedName">Xam.WebRtc.Android.VoiceEngine</attr>
 
   <attr path="/api/package[@name='org.webrtc']/interface[@name='CameraSession']"
         name="visibility">public</attr>

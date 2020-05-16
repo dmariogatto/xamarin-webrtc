@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
-    <id>Google.Android.WebRtc</id>
+    <id>Xam.WebRtc.Android</id>
     <version>1.0.30039</version>
     <title>Xamarin.Android bindings for WebRTC</title>
     <authors>dmariogatto</authors>
@@ -31,5 +31,6 @@
     <file src="Content\_._" target="lib/monoandroid71" />
     <file src="Content\_._" target="lib/monoandroid80" />
     <file src="Content\_._" target="lib/monoandroid81" />
+    <file src="bin\Release\Xam.WebRtc.Android.dll" target="lib/monoandroid90" />    
   </files>
 </package>

@@ -6,7 +6,7 @@ using Foundation;
 using ObjCRuntime;
 using UIKit;
 
-namespace Google.iOS.WebRtc
+namespace Xam.WebRtc.iOS
 {
 	delegate void NSDispatchHandler();
 

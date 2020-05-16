@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
-namespace Google.iOS.WebRtc
+namespace Xam.WebRtc.iOS
 {
 	[Native]
 	public enum RTCVideoRotation : long

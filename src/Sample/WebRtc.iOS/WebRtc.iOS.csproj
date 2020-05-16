@@ -68,7 +68,7 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Google.iOS.WebRtc">
+    <PackageReference Include="Xam.WebRtc.iOS">
       <Version>1.1.29400</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Essentials" Version="1.5.2" />
