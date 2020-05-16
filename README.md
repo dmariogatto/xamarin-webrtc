@@ -4,20 +4,20 @@
 
 ### Android
 
-Download : [Nuget Package](https://www.nuget.org/packages/Google.Android.WebRtc/1.0.30039)
+Download : [Nuget Package](https://www.nuget.org/packages/Xam.WebRtc.Android/1.0.30039)
 
 ```
-    Install-Package Google.Android.WebRtc
+    Install-Package Xam.WebRtc.Android
 ```
 
 Supports Android 7.0 and up
 
 ### iOS
 
-Download : [Nuget Package](https://www.nuget.org/packages/Google.iOS.WebRtc/1.1.29400)
+Download : [Nuget Package](https://www.nuget.org/packages/Xam.WebRtc.iOS/1.1.29400)
 
 ```
-    Install-Package Google.iOS.WebRtc
+    Install-Package Xam.WebRtc.iOS
 ```
 
 Supports iOS 9.0 and up
