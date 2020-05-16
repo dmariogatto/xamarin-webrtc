@@ -68,6 +68,9 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Google.iOS.WebRtc">
+      <Version>1.1.29400</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Essentials" Version="1.5.2" />
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
@@ -122,12 +125,6 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon60.png">
       <Visible>false</Visible>
     </ImageAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Bindings\Google.iOS.WebRtc\Google.iOS.WebRtc.csproj">
-      <Project>{106fce9c-c022-4696-9c38-f42bd9e18131}</Project>
-      <Name>Google.iOS.WebRtc</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
