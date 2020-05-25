@@ -1,5 +1,6 @@
 ﻿using Android.App;
 using Android.Content.PM;
+using Android.Media;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V7.App;
@@ -47,7 +48,12 @@ namespace WebRtc.Android
             waveButton.Click += (sender, args) => _webRtcClient.SendMessage(waveButton.Text);
 
             _remoteView = FindViewById<SurfaceViewRenderer>(Resource.Id.remote_video_view);
-            _localView = FindViewById<SurfaceViewRenderer>(Resource.Id.local_video_view);            
+            _localView = FindViewById<SurfaceViewRenderer>(Resource.Id.local_video_view);
+
+            // Force audio output to loudspeaker
+            var audioManager = (AudioManager)GetSystemService(AudioService);
+            audioManager.Mode = Mode.InCall;
+            audioManager.SpeakerphoneOn = true;
 
             RunOnUiThread(async () => await Init());
         }
