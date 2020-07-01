@@ -2857,7 +2857,7 @@ namespace Xam.WebRtc.iOS
 
 		// @property(nonatomic, readonly) NSDictionary<NSString *, NSObject *> *values;
 		[Export("values")]
-		NSDictionary<NSString, NSObject> Statistics { get; }
+		NSDictionary<NSString, NSObject> Values { get; }
 	}
 
 	// @interface RTCSessionDescription : NSObject
