@@ -2347,30 +2347,30 @@ namespace Xam.WebRtc.iOS
 		RTCDataChannel DataChannelForLabel(string label, RTCDataChannelConfiguration configuration);
 	}
 
-	// typedef void (^RTCStatisticsCompletionHandler)(RTCStatisticsReport * _Nonnull);
-	//delegate void RTCStatisticsCompletionHandler(RTCStatisticsReport arg0);
+	// typedef void (^RTCStatisticsCompletionHandler)(RTCStatisticsReport *);
+	delegate void RTCStatisticsCompletionHandler(RTCStatisticsReport arg0);
 
-	//// @interface Stats (RTCPeerConnection)
-	//[Category]
-	//[BaseType(typeof(RTCPeerConnection))]
-	//interface RTCPeerConnection_Stats
-	//{
-	//	// -(void)statsForTrack:(RTCMediaStreamTrack * _Nullable)mediaStreamTrack statsOutputLevel:(RTCStatsOutputLevel)statsOutputLevel completionHandler:(void (^ _Nullable)(NSArray<RTCLegacyStatsReport *> * _Nonnull))completionHandler;
-	//	[Export("statsForTrack:statsOutputLevel:completionHandler:")]
-	//	void StatsForTrack([NullAllowed] RTCMediaStreamTrack mediaStreamTrack, RTCStatsOutputLevel statsOutputLevel, [NullAllowed] Action<NSArray<RTCLegacyStatsReport>> completionHandler);
+	// @interface Stats (RTCPeerConnection)
+	[Category]
+	[BaseType(typeof(RTCPeerConnection))]
+	interface RTCPeerConnection_Stats
+	{
+		// -(void)statsForTrack:(RTCMediaStreamTrack * _Nullable)mediaStreamTrack statsOutputLevel:(id)statsOutputLevel completionHandler:(void (^ _Nullable)(int))completionHandler;
+		[Export("statsForTrack:statsOutputLevel:completionHandler:")]
+		void StatsForTrack([NullAllowed] RTCMediaStreamTrack mediaStreamTrack, NSObject statsOutputLevel, [NullAllowed] Action<int> completionHandler);
 
-	//	// -(void)statisticsWithCompletionHandler:(RTCStatisticsCompletionHandler _Nonnull)completionHandler;
-	//	[Export("statisticsWithCompletionHandler:")]
-	//	void StatisticsWithCompletionHandler(RTCStatisticsCompletionHandler completionHandler);
+		// -(void)statisticsWithCompletionHandler:(RTCStatisticsCompletionHandler)completionHandler;
+		[Export("statisticsWithCompletionHandler:")]
+		void StatisticsWithCompletionHandler(RTCStatisticsCompletionHandler completionHandler);
 
-	//	// -(void)statisticsForSender:(RTCRtpSender * _Nonnull)sender completionHandler:(RTCStatisticsCompletionHandler _Nonnull)completionHandler;
-	//	[Export("statisticsForSender:completionHandler:")]
-	//	void StatisticsForSender(RTCRtpSender sender, RTCStatisticsCompletionHandler completionHandler);
+		// -(void)statisticsForSender:(RTCRtpSender *)sender completionHandler:(RTCStatisticsCompletionHandler)completionHandler;
+		[Export("statisticsForSender:completionHandler:")]
+		void StatisticsForSender(RTCRtpSender sender, RTCStatisticsCompletionHandler completionHandler);
 
-	//	// -(void)statisticsForReceiver:(RTCRtpReceiver * _Nonnull)receiver completionHandler:(RTCStatisticsCompletionHandler _Nonnull)completionHandler;
-	//	[Export("statisticsForReceiver:completionHandler:")]
-	//	void StatisticsForReceiver(RTCRtpReceiver receiver, RTCStatisticsCompletionHandler completionHandler);
-	//}
+		// -(void)statisticsForReceiver:(RTCRtpReceiver *)receiver completionHandler:(RTCStatisticsCompletionHandler)completionHandler;
+		[Export("statisticsForReceiver:completionHandler:")]
+		void StatisticsForReceiver(RTCRtpReceiver receiver, RTCStatisticsCompletionHandler completionHandler);
+	}
 
 	// @interface RTCPeerConnectionFactory : NSObject
 	[BaseType(typeof(NSObject))]
@@ -2821,12 +2821,44 @@ namespace Xam.WebRtc.iOS
 		void Stop();
 	}
 
-	// @interface RTCRtpTransceiver : NSObject <RTCRtpTransceiver>
-	//[BaseType(typeof(NSObject))]
-	//[DisableDefaultCtor]
+	// @interface RTCRtpTransceiver <RTCRtpTransceiver>
 	//interface RTCRtpTransceiver : IRTCRtpTransceiver
 	//{
 	//}
+
+	// @interface RTCStatisticsReport
+	[BaseType(typeof(NSObject))]
+	interface RTCStatisticsReport
+	{
+		// @property (readonly, nonatomic) int timestamp_us;
+		[Export("timestamp_us")]
+		double TimestampUs { get; }
+
+		// @property(nonatomic, readonly) NSDictionary<NSString *, RTCStatistics *> *statistics;
+		[Export("statistics")]
+		NSDictionary<NSString, RTCStatistics> Statistics { get; }
+	}
+
+	// @interface RTCStatistics
+	[BaseType(typeof(NSObject))]
+	interface RTCStatistics : INativeObject
+	{
+		// @property (readonly, nonatomic) int * id;
+		[Export("id")]
+		string Id { get; }
+
+		// @property (readonly, nonatomic) int timestamp_us;
+		[Export("timestamp_us")]
+		double TimestampUs { get; }
+
+		// @property (readonly, nonatomic) int * type;
+		[Export("type")]
+		string Type { get; }
+
+		// @property(nonatomic, readonly) NSDictionary<NSString *, NSObject *> *values;
+		[Export("values")]
+		NSDictionary<NSString, NSObject> Statistics { get; }
+	}
 
 	// @interface RTCSessionDescription : NSObject
 	[BaseType(typeof(NSObject))]
