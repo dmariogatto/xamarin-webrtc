@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>Xam.WebRtc.iOS</id>
-    <version>1.1.29400</version>
+    <version>1.1.29400.1</version>
     <title>Xamarin.iOS bindings for WebRTC</title>
     <summary>Xamarin.iOS bindings for WebRTC</summary>
     <authors>dmariogatto</authors>
@@ -17,6 +17,7 @@
     <copyright>© Google and Daniel Gatto</copyright>
     <tags>Xamarin.iOS Google WebRTC Xamarin iOS</tags>
     <repository type="git" url="https://github.com/dmariogatto/xamarin-webrtc" />
+    <releaseNotes>- Added missing RTC Statistics classes</releaseNotes>
     <dependencies>
       <group targetFramework="Xamarin.iOS1.0" />
     </dependencies>
