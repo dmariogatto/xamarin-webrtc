@@ -2828,6 +2828,7 @@ namespace Xam.WebRtc.iOS
 
 	// @interface RTCStatisticsReport
 	[BaseType(typeof(NSObject))]
+	[Protocol]
 	interface RTCStatisticsReport
 	{
 		// @property (readonly, nonatomic) int timestamp_us;
@@ -2841,6 +2842,7 @@ namespace Xam.WebRtc.iOS
 
 	// @interface RTCStatistics
 	[BaseType(typeof(NSObject))]
+	[Protocol]
 	interface RTCStatistics : INativeObject
 	{
 		// @property (readonly, nonatomic) int * id;
