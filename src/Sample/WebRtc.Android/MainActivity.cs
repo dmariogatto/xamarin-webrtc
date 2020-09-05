@@ -3,9 +3,9 @@ using Android.Content.PM;
 using Android.Media;
 using Android.OS;
 using Android.Runtime;
-using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
+using AndroidX.AppCompat.App;
 using Newtonsoft.Json;
 using Square.OkHttp3;
 using System;
@@ -14,8 +14,9 @@ using WebRtc.Android.Code;
 using WebRtc.Android.Observers;
 using Xam.WebRtc.Android;
 using Xamarin.Essentials;
-using AlertDialog = Android.Support.V7.App.AlertDialog;
-using Toolbar = Android.Support.V7.Widget.Toolbar;
+using AlertDialog = AndroidX.AppCompat.App.AlertDialog;
+using Orientation = Android.Widget.Orientation;
+using Toolbar = AndroidX.AppCompat.Widget.Toolbar;
 
 namespace WebRtc.Android
 {
