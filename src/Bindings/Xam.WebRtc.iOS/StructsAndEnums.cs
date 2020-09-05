@@ -406,4 +406,13 @@ namespace Xam.WebRtc.iOS
 		Call,
 		App
 	}
+
+	[Native]
+	public enum RTCPriority : long
+	{
+		RTCPriorityVeryLow,
+		RTCPriorityLow,
+		RTCPriorityMedium,
+		RTCPriorityHigh
+	}
 }

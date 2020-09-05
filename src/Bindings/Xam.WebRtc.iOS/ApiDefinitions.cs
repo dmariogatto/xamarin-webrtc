@@ -5,10 +5,40 @@ using CoreVideo;
 using Foundation;
 using ObjCRuntime;
 using UIKit;
-using WebRTC;
 
 namespace Xam.WebRtc.iOS
-{	
+{
+	delegate void NSDispatchHandler();
+
+	public interface IRTCCodecSpecificInfo { }
+	public interface IRTCVideoFrameBuffer { }
+	public interface IRTCYUVPlanarBuffer { }
+	public interface IRTCI420Buffer { }
+	public interface IRTCMutableYUVPlanarBuffer { }
+	public interface IRTCMutableI420Buffer { }
+	public interface IRTCVideoCapturerDelegate { }
+	public interface IRTCVideoDecoder { }
+	public interface IRTCVideoDecoderFactory { }
+	public interface IRTCVideoEncoder { }
+	public interface IRTCVideoEncoderSelector { }
+	public interface IRTCVideoEncoderFactory { }
+	public interface IRTCVideoRenderer { }
+	public interface IRTCVideoViewDelegate { }
+	public interface IRTCAudioSessionDelegate { }
+	public interface IRTCAudioSessionActivationDelegate { }
+	public interface IRTCNetworkMonitor { }
+	public interface IRTCMTLVideoView { }
+	public interface IRTCVideoViewShading { }
+	public interface IRTCDataChannelDelegate { }
+	public interface IRTCPeerConnectionDelegate { }
+	public interface IRTCRtpReceiverDelegate { }
+	public interface IRTCRtpReceiver { }
+	public interface IRTCDtmfSender { }
+	public interface IRTCRtpSender { }
+	public interface IRTCRtpTransceiver { }
+	public interface IRTCStatisticsReport { }
+	public interface IRTCStatistics { }
+
 	// @protocol RTCCodecSpecificInfo <NSObject>
 	/*
   Check whether adding [Model] to this declaration is appropriate.
@@ -52,23 +82,23 @@ namespace Xam.WebRtc.iOS
 
 		// @property (readonly, nonatomic) id<RTCVideoFrameBuffer> _Nonnull buffer;
 		[Export("buffer")]
-		RTCVideoFrameBuffer Buffer { get; }
+		IRTCVideoFrameBuffer Buffer { get; }
 
 		// -(instancetype _Nonnull)initWithPixelBuffer:(CVPixelBufferRef _Nonnull)pixelBuffer rotation:(RTCVideoRotation)rotation timeStampNs:(int64_t)timeStampNs __attribute__((deprecated("use initWithBuffer instead")));
 		[Export("initWithPixelBuffer:rotation:timeStampNs:")]
-		unsafe IntPtr Constructor(CVPixelBufferRef* pixelBuffer, RTCVideoRotation rotation, long timeStampNs);
+		unsafe IntPtr Constructor(ref CVPixelBuffer pixelBuffer, RTCVideoRotation rotation, long timeStampNs);
 
 		// -(instancetype _Nonnull)initWithPixelBuffer:(CVPixelBufferRef _Nonnull)pixelBuffer scaledWidth:(int)scaledWidth scaledHeight:(int)scaledHeight cropWidth:(int)cropWidth cropHeight:(int)cropHeight cropX:(int)cropX cropY:(int)cropY rotation:(RTCVideoRotation)rotation timeStampNs:(int64_t)timeStampNs __attribute__((deprecated("use initWithBuffer instead")));
 		[Export("initWithPixelBuffer:scaledWidth:scaledHeight:cropWidth:cropHeight:cropX:cropY:rotation:timeStampNs:")]
-		unsafe IntPtr Constructor(CVPixelBufferRef* pixelBuffer, int scaledWidth, int scaledHeight, int cropWidth, int cropHeight, int cropX, int cropY, RTCVideoRotation rotation, long timeStampNs);
+		unsafe IntPtr Constructor(ref CVPixelBuffer pixelBuffer, int scaledWidth, int scaledHeight, int cropWidth, int cropHeight, int cropX, int cropY, RTCVideoRotation rotation, long timeStampNs);
 
 		// -(instancetype _Nonnull)initWithBuffer:(id<RTCVideoFrameBuffer> _Nonnull)frameBuffer rotation:(RTCVideoRotation)rotation timeStampNs:(int64_t)timeStampNs;
 		[Export("initWithBuffer:rotation:timeStampNs:")]
-		IntPtr Constructor(RTCVideoFrameBuffer frameBuffer, RTCVideoRotation rotation, long timeStampNs);
+		IntPtr Constructor(IRTCVideoFrameBuffer frameBuffer, RTCVideoRotation rotation, long timeStampNs);
 
 		// -(RTCVideoFrame * _Nonnull)newI420VideoFrame;
 		[Export("newI420VideoFrame")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		RTCVideoFrame NewI420VideoFrame { get; }
 	}
 
@@ -160,8 +190,8 @@ namespace Xam.WebRtc.iOS
 		// @required -(id<RTCI420Buffer> _Nonnull)toI420;
 		[Abstract]
 		[Export("toI420")]
-		[Verify(MethodToProperty)]
-		RTCI420Buffer ToI420 { get; }
+		//[Verify(MethodToProperty)]
+		IRTCI420Buffer ToI420 { get; }
 	}
 
 	// @protocol RTCYUVPlanarBuffer <RTCVideoFrameBuffer>
@@ -175,7 +205,7 @@ namespace Xam.WebRtc.iOS
   be used.
 */
 	[Protocol]
-	interface RTCYUVPlanarBuffer : IRTCVideoFrameBuffer
+	interface RTCYUVPlanarBuffer : RTCVideoFrameBuffer
 	{
 		// @required @property (readonly, nonatomic) int chromaWidth;
 		[Abstract]
@@ -190,17 +220,17 @@ namespace Xam.WebRtc.iOS
 		// @required @property (readonly, nonatomic) const uint8_t * _Nonnull dataY;
 		[Abstract]
 		[Export("dataY")]
-		unsafe byte* DataY { get; }
+		IntPtr DataY { get; }
 
 		// @required @property (readonly, nonatomic) const uint8_t * _Nonnull dataU;
 		[Abstract]
 		[Export("dataU")]
-		unsafe byte* DataU { get; }
+		IntPtr DataU { get; }
 
 		// @required @property (readonly, nonatomic) const uint8_t * _Nonnull dataV;
 		[Abstract]
 		[Export("dataV")]
-		unsafe byte* DataV { get; }
+		IntPtr DataV { get; }
 
 		// @required @property (readonly, nonatomic) int strideY;
 		[Abstract]
@@ -220,17 +250,17 @@ namespace Xam.WebRtc.iOS
 		// @required -(instancetype _Nonnull)initWithWidth:(int)width height:(int)height dataY:(const uint8_t * _Nonnull)dataY dataU:(const uint8_t * _Nonnull)dataU dataV:(const uint8_t * _Nonnull)dataV;
 		[Abstract]
 		[Export("initWithWidth:height:dataY:dataU:dataV:")]
-		unsafe IntPtr Height(int width, int height, byte* dataY, byte* dataU, byte* dataV);
+		IntPtr InitWithWidth(int width, int height, IntPtr dataY, IntPtr dataU, IntPtr dataV);
 
 		// @required -(instancetype _Nonnull)initWithWidth:(int)width height:(int)height;
 		[Abstract]
 		[Export("initWithWidth:height:")]
-		IntPtr Height(int width, int height);
+		IntPtr InitWithWidth(int width, int height);
 
 		// @required -(instancetype _Nonnull)initWithWidth:(int)width height:(int)height strideY:(int)strideY strideU:(int)strideU strideV:(int)strideV;
 		[Abstract]
 		[Export("initWithWidth:height:strideY:strideU:strideV:")]
-		IntPtr Height(int width, int height, int strideY, int strideU, int strideV);
+		IntPtr InitWithWidth(int width, int height, int strideY, int strideU, int strideV);
 	}
 
 	// @protocol RTCI420Buffer <RTCYUVPlanarBuffer>
@@ -244,7 +274,8 @@ namespace Xam.WebRtc.iOS
   be used.
 */
 	[Protocol]
-	interface RTCI420Buffer : IRTCYUVPlanarBuffer
+	[BaseType(typeof(NSObject))]
+	interface RTCI420Buffer : RTCYUVPlanarBuffer
 	{
 	}
 
@@ -259,22 +290,22 @@ namespace Xam.WebRtc.iOS
   be used.
 */
 	[Protocol]
-	interface RTCMutableYUVPlanarBuffer : IRTCYUVPlanarBuffer
+	interface RTCMutableYUVPlanarBuffer : RTCYUVPlanarBuffer
 	{
 		// @required @property (readonly, nonatomic) uint8_t * _Nonnull mutableDataY;
 		[Abstract]
 		[Export("mutableDataY")]
-		unsafe byte* MutableDataY { get; }
+		IntPtr MutableDataY { get; }
 
 		// @required @property (readonly, nonatomic) uint8_t * _Nonnull mutableDataU;
 		[Abstract]
 		[Export("mutableDataU")]
-		unsafe byte* MutableDataU { get; }
+		IntPtr MutableDataU { get; }
 
 		// @required @property (readonly, nonatomic) uint8_t * _Nonnull mutableDataV;
 		[Abstract]
 		[Export("mutableDataV")]
-		unsafe byte* MutableDataV { get; }
+		IntPtr MutableDataV { get; }
 	}
 
 	// @protocol RTCMutableI420Buffer <RTCI420Buffer, RTCMutableYUVPlanarBuffer>
@@ -288,7 +319,7 @@ namespace Xam.WebRtc.iOS
   be used.
 */
 	[Protocol]
-	interface RTCMutableI420Buffer : IRTCI420Buffer, IRTCMutableYUVPlanarBuffer
+	interface RTCMutableI420Buffer : RTCI420Buffer, RTCMutableYUVPlanarBuffer
 	{
 	}
 
@@ -330,7 +361,7 @@ namespace Xam.WebRtc.iOS
 	{
 		[Wrap("WeakDelegate")]
 		[NullAllowed]
-		RTCVideoCapturerDelegate Delegate { get; set; }
+		IRTCVideoCapturerDelegate Delegate { get; set; }
 
 		// @property (nonatomic, weak) id<RTCVideoCapturerDelegate> _Nullable delegate;
 		[NullAllowed, Export("delegate", ArgumentSemantic.Weak)]
@@ -338,7 +369,7 @@ namespace Xam.WebRtc.iOS
 
 		// -(instancetype _Nonnull)initWithDelegate:(id<RTCVideoCapturerDelegate> _Nonnull)delegate;
 		[Export("initWithDelegate:")]
-		IntPtr Constructor(RTCVideoCapturerDelegate @delegate);
+		IntPtr Constructor(IRTCVideoCapturerDelegate @delegate);
 	}
 
 	// @interface RTCVideoCodecInfo : NSObject <NSCoding>
@@ -439,18 +470,18 @@ namespace Xam.WebRtc.iOS
 		// @required -(NSInteger)releaseDecoder;
 		[Abstract]
 		[Export("releaseDecoder")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		nint ReleaseDecoder { get; }
 
 		// @required -(NSInteger)decode:(RTCEncodedImage * _Nonnull)encodedImage missingFrames:(BOOL)missingFrames codecSpecificInfo:(id<RTCCodecSpecificInfo> _Nullable)info renderTimeMs:(int64_t)renderTimeMs;
 		[Abstract]
 		[Export("decode:missingFrames:codecSpecificInfo:renderTimeMs:")]
-		nint Decode(RTCEncodedImage encodedImage, bool missingFrames, [NullAllowed] RTCCodecSpecificInfo info, long renderTimeMs);
+		nint Decode(RTCEncodedImage encodedImage, bool missingFrames, [NullAllowed] IRTCCodecSpecificInfo info, long renderTimeMs);
 
 		// @required -(NSString * _Nonnull)implementationName;
 		[Abstract]
 		[Export("implementationName")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		string ImplementationName { get; }
 	}
 
@@ -472,12 +503,12 @@ namespace Xam.WebRtc.iOS
 		[Abstract]
 		[Export("createDecoder:")]
 		[return: NullAllowed]
-		RTCVideoDecoder CreateDecoder(RTCVideoCodecInfo info);
+		IRTCVideoDecoder CreateDecoder(RTCVideoCodecInfo info);
 
 		// @required -(NSArray<RTCVideoCodecInfo *> * _Nonnull)supportedCodecs;
 		[Abstract]
 		[Export("supportedCodecs")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		RTCVideoCodecInfo[] SupportedCodecs { get; }
 	}
 
@@ -499,7 +530,7 @@ namespace Xam.WebRtc.iOS
 	}
 
 	// typedef BOOL (^RTCVideoEncoderCallback)(RTCEncodedImage * _Nonnull, id<RTCCodecSpecificInfo> _Nonnull, RTCRtpFragmentationHeader * _Nonnull);
-	delegate bool RTCVideoEncoderCallback(RTCEncodedImage arg0, RTCCodecSpecificInfo arg1, RTCRtpFragmentationHeader arg2);
+	delegate bool RTCVideoEncoderCallback(RTCEncodedImage arg0, IRTCCodecSpecificInfo arg1, RTCRtpFragmentationHeader arg2);
 
 	// @protocol RTCVideoEncoder <NSObject>
 	/*
@@ -528,13 +559,13 @@ namespace Xam.WebRtc.iOS
 		// @required -(NSInteger)releaseEncoder;
 		[Abstract]
 		[Export("releaseEncoder")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		nint ReleaseEncoder { get; }
 
 		// @required -(NSInteger)encode:(RTCVideoFrame * _Nonnull)frame codecSpecificInfo:(id<RTCCodecSpecificInfo> _Nullable)info frameTypes:(NSArray<NSNumber *> * _Nonnull)frameTypes;
 		[Abstract]
 		[Export("encode:codecSpecificInfo:frameTypes:")]
-		nint Encode(RTCVideoFrame frame, [NullAllowed] RTCCodecSpecificInfo info, NSNumber[] frameTypes);
+		nint Encode(RTCVideoFrame frame, [NullAllowed] IRTCCodecSpecificInfo info, NSNumber[] frameTypes);
 
 		// @required -(int)setBitrate:(uint32_t)bitrateKbit framerate:(uint32_t)framerate;
 		[Abstract]
@@ -544,13 +575,13 @@ namespace Xam.WebRtc.iOS
 		// @required -(NSString * _Nonnull)implementationName;
 		[Abstract]
 		[Export("implementationName")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		string ImplementationName { get; }
 
 		// @required -(RTCVideoEncoderQpThresholds * _Nullable)scalingSettings;
 		[Abstract]
 		[NullAllowed, Export("scalingSettings")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		RTCVideoEncoderQpThresholds ScalingSettings { get; }
 	}
 
@@ -582,7 +613,7 @@ namespace Xam.WebRtc.iOS
 		// @required -(RTCVideoCodecInfo * _Nullable)encoderForBrokenEncoder;
 		[Abstract]
 		[NullAllowed, Export("encoderForBrokenEncoder")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		RTCVideoCodecInfo EncoderForBrokenEncoder { get; }
 	}
 
@@ -604,23 +635,23 @@ namespace Xam.WebRtc.iOS
 		[Abstract]
 		[Export("createEncoder:")]
 		[return: NullAllowed]
-		RTCVideoEncoder CreateEncoder(RTCVideoCodecInfo info);
+		IRTCVideoEncoder CreateEncoder(RTCVideoCodecInfo info);
 
 		// @required -(NSArray<RTCVideoCodecInfo *> * _Nonnull)supportedCodecs;
 		[Abstract]
 		[Export("supportedCodecs")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		RTCVideoCodecInfo[] SupportedCodecs { get; }
 
 		// @optional -(NSArray<RTCVideoCodecInfo *> * _Nonnull)implementations;
 		[Export("implementations")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		RTCVideoCodecInfo[] Implementations { get; }
 
 		// @optional -(id<RTCVideoEncoderSelector> _Nullable)encoderSelector;
 		[NullAllowed, Export("encoderSelector")]
-		[Verify(MethodToProperty)]
-		RTCVideoEncoderSelector EncoderSelector { get; }
+		//[Verify(MethodToProperty)]
+		IRTCVideoEncoderSelector EncoderSelector { get; }
 	}
 
 	// @protocol RTCVideoRenderer <NSObject>
@@ -650,30 +681,31 @@ namespace Xam.WebRtc.iOS
 
 	// @protocol RTCVideoViewDelegate
 	[Protocol, Model(AutoGeneratedName = true)]
+	[BaseType(typeof(NSObject))]
 	interface RTCVideoViewDelegate
 	{
 		// @required -(void)videoView:(id<RTCVideoRenderer> _Nonnull)videoView didChangeVideoSize:(CGSize)size;
 		[Abstract]
 		[Export("videoView:didChangeVideoSize:")]
-		void DidChangeVideoSize(RTCVideoRenderer videoView, CGSize size);
+		void DidChangeVideoSize(IRTCVideoRenderer videoView, CGSize size);
 	}
 
-	[Static]
-	[Verify(ConstantsInterfaceAssociation)]
-	partial interface Constants
-	{
-		// extern NSString *const _Nonnull kRTCAudioSessionErrorDomain;
-		[Field("kRTCAudioSessionErrorDomain", "__Internal")]
-		NSString kRTCAudioSessionErrorDomain { get; }
+	//[Static]
+	//[Verify(ConstantsInterfaceAssociation)]
+	//partial interface Constants
+	//{
+	//	// extern NSString *const _Nonnull kRTCAudioSessionErrorDomain;
+	//	[Field("kRTCAudioSessionErrorDomain", "__Internal")]
+	//	NSString kRTCAudioSessionErrorDomain { get; }
 
-		// extern const NSInteger kRTCAudioSessionErrorLockRequired;
-		[Field("kRTCAudioSessionErrorLockRequired", "__Internal")]
-		nint kRTCAudioSessionErrorLockRequired { get; }
+	//	// extern const NSInteger kRTCAudioSessionErrorLockRequired;
+	//	[Field("kRTCAudioSessionErrorLockRequired", "__Internal")]
+	//	nint kRTCAudioSessionErrorLockRequired { get; }
 
-		// extern const NSInteger kRTCAudioSessionErrorConfiguration;
-		[Field("kRTCAudioSessionErrorConfiguration", "__Internal")]
-		nint kRTCAudioSessionErrorConfiguration { get; }
-	}
+	//	// extern const NSInteger kRTCAudioSessionErrorConfiguration;
+	//	[Field("kRTCAudioSessionErrorConfiguration", "__Internal")]
+	//	nint kRTCAudioSessionErrorConfiguration { get; }
+	//}
 
 	// @protocol RTCAudioSessionDelegate <NSObject>
 	[Protocol, Model(AutoGeneratedName = true)]
@@ -702,7 +734,7 @@ namespace Xam.WebRtc.iOS
 
 		// @optional -(void)audioSession:(RTCAudioSession * _Nonnull)session didChangeCanPlayOrRecord:(BOOL)canPlayOrRecord;
 		[Export("audioSession:didChangeCanPlayOrRecord:")]
-		void AudioSession(RTCAudioSession session, bool canPlayOrRecord);
+		void AudioSessionDidChangeCanPlayOrRecord(RTCAudioSession session, bool canPlayOrRecord);
 
 		// @optional -(void)audioSessionDidStartPlayOrRecord:(RTCAudioSession * _Nonnull)session;
 		[Export("audioSessionDidStartPlayOrRecord:")]
@@ -714,23 +746,23 @@ namespace Xam.WebRtc.iOS
 
 		// @optional -(void)audioSession:(RTCAudioSession * _Nonnull)audioSession didChangeOutputVolume:(float)outputVolume;
 		[Export("audioSession:didChangeOutputVolume:")]
-		void AudioSession(RTCAudioSession audioSession, float outputVolume);
+		void AudioSessionDidChangeOutputVolume(RTCAudioSession audioSession, float outputVolume);
 
 		// @optional -(void)audioSession:(RTCAudioSession * _Nonnull)audioSession didDetectPlayoutGlitch:(int64_t)totalNumberOfGlitches;
 		[Export("audioSession:didDetectPlayoutGlitch:")]
-		void AudioSession(RTCAudioSession audioSession, long totalNumberOfGlitches);
+		void AudioSessionDidDetectPlayoutGlitch(RTCAudioSession audioSession, long totalNumberOfGlitches);
 
 		// @optional -(void)audioSession:(RTCAudioSession * _Nonnull)audioSession willSetActive:(BOOL)active;
 		[Export("audioSession:willSetActive:")]
-		void AudioSession(RTCAudioSession audioSession, bool active);
+		void AudioSessionWillSetActive(RTCAudioSession audioSession, bool active);
 
 		// @optional -(void)audioSession:(RTCAudioSession * _Nonnull)audioSession didSetActive:(BOOL)active;
 		[Export("audioSession:didSetActive:")]
-		void AudioSession(RTCAudioSession audioSession, bool active);
+		void AudioSessionDidSetActive(RTCAudioSession audioSession, bool active);
 
 		// @optional -(void)audioSession:(RTCAudioSession * _Nonnull)audioSession failedToSetActive:(BOOL)active error:(NSError * _Nonnull)error;
 		[Export("audioSession:failedToSetActive:error:")]
-		void AudioSession(RTCAudioSession audioSession, bool active, NSError error);
+		void AudioSessionFailedToSetActive(RTCAudioSession audioSession, bool active, NSError error);
 	}
 
 	// @protocol RTCAudioSessionActivationDelegate <NSObject>
@@ -752,7 +784,7 @@ namespace Xam.WebRtc.iOS
 	// @interface RTCAudioSession : NSObject <RTCAudioSessionActivationDelegate>
 	[BaseType(typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface RTCAudioSession : IRTCAudioSessionActivationDelegate
+	interface RTCAudioSession : RTCAudioSessionActivationDelegate
 	{
 		// @property (readonly, nonatomic) AVAudioSession * _Nonnull session;
 		[Export("session")]
@@ -885,11 +917,11 @@ namespace Xam.WebRtc.iOS
 
 		// -(void)addDelegate:(id<RTCAudioSessionDelegate> _Nonnull)delegate;
 		[Export("addDelegate:")]
-		void AddDelegate(RTCAudioSessionDelegate @delegate);
+		void AddDelegate(IRTCAudioSessionDelegate @delegate);
 
 		// -(void)removeDelegate:(id<RTCAudioSessionDelegate> _Nonnull)delegate;
 		[Export("removeDelegate:")]
-		void RemoveDelegate(RTCAudioSessionDelegate @delegate);
+		void RemoveDelegate(IRTCAudioSessionDelegate @delegate);
 
 		// -(void)lockForConfiguration;
 		[Export("lockForConfiguration")]
@@ -962,30 +994,30 @@ namespace Xam.WebRtc.iOS
 		bool SetConfiguration(RTCAudioSessionConfiguration configuration, bool active, [NullAllowed] out NSError outError);
 	}
 
-	[Static]
-	[Verify(ConstantsInterfaceAssociation)]
-	partial interface Constants
-	{
-		// extern const int kRTCAudioSessionPreferredNumberOfChannels __attribute__((visibility("default")));
-		[Field("kRTCAudioSessionPreferredNumberOfChannels", "__Internal")]
-		int kRTCAudioSessionPreferredNumberOfChannels { get; }
+	//[Static]
+	//[Verify(ConstantsInterfaceAssociation)]
+	//partial interface Constants
+	//{
+	//	// extern const int kRTCAudioSessionPreferredNumberOfChannels __attribute__((visibility("default")));
+	//	[Field("kRTCAudioSessionPreferredNumberOfChannels", "__Internal")]
+	//	int kRTCAudioSessionPreferredNumberOfChannels { get; }
 
-		// extern const double kRTCAudioSessionHighPerformanceSampleRate __attribute__((visibility("default")));
-		[Field("kRTCAudioSessionHighPerformanceSampleRate", "__Internal")]
-		double kRTCAudioSessionHighPerformanceSampleRate { get; }
+	//	// extern const double kRTCAudioSessionHighPerformanceSampleRate __attribute__((visibility("default")));
+	//	[Field("kRTCAudioSessionHighPerformanceSampleRate", "__Internal")]
+	//	double kRTCAudioSessionHighPerformanceSampleRate { get; }
 
-		// extern const double kRTCAudioSessionLowComplexitySampleRate __attribute__((visibility("default")));
-		[Field("kRTCAudioSessionLowComplexitySampleRate", "__Internal")]
-		double kRTCAudioSessionLowComplexitySampleRate { get; }
+	//	// extern const double kRTCAudioSessionLowComplexitySampleRate __attribute__((visibility("default")));
+	//	[Field("kRTCAudioSessionLowComplexitySampleRate", "__Internal")]
+	//	double kRTCAudioSessionLowComplexitySampleRate { get; }
 
-		// extern const double kRTCAudioSessionHighPerformanceIOBufferDuration __attribute__((visibility("default")));
-		[Field("kRTCAudioSessionHighPerformanceIOBufferDuration", "__Internal")]
-		double kRTCAudioSessionHighPerformanceIOBufferDuration { get; }
+	//	// extern const double kRTCAudioSessionHighPerformanceIOBufferDuration __attribute__((visibility("default")));
+	//	[Field("kRTCAudioSessionHighPerformanceIOBufferDuration", "__Internal")]
+	//	double kRTCAudioSessionHighPerformanceIOBufferDuration { get; }
 
-		// extern const double kRTCAudioSessionLowComplexityIOBufferDuration __attribute__((visibility("default")));
-		[Field("kRTCAudioSessionLowComplexityIOBufferDuration", "__Internal")]
-		double kRTCAudioSessionLowComplexityIOBufferDuration { get; }
-	}
+	//	// extern const double kRTCAudioSessionLowComplexityIOBufferDuration __attribute__((visibility("default")));
+	//	[Field("kRTCAudioSessionLowComplexityIOBufferDuration", "__Internal")]
+	//	double kRTCAudioSessionLowComplexityIOBufferDuration { get; }
+	//}
 
 	// @interface RTCAudioSessionConfiguration : NSObject
 	[BaseType(typeof(NSObject))]
@@ -1036,7 +1068,7 @@ namespace Xam.WebRtc.iOS
 	}
 
 	// @interface RTCCameraVideoCapturer : RTCVideoCapturer
-	[Unavailable(PlatformName.iOSAppExtension)]
+	//[Unavailable(PlatformName.iOSAppExtension)]
 	[BaseType(typeof(RTCVideoCapturer))]
 	interface RTCCameraVideoCapturer
 	{
@@ -1047,7 +1079,7 @@ namespace Xam.WebRtc.iOS
 		// +(NSArray<AVCaptureDevice *> * _Nonnull)captureDevices;
 		[Static]
 		[Export("captureDevices")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		AVCaptureDevice[] CaptureDevices { get; }
 
 		// +(NSArray<AVCaptureDeviceFormat *> * _Nonnull)supportedFormatsForDevice:(AVCaptureDevice * _Nonnull)device;
@@ -1057,7 +1089,7 @@ namespace Xam.WebRtc.iOS
 
 		// -(FourCharCode)preferredOutputPixelFormat;
 		[Export("preferredOutputPixelFormat")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		uint PreferredOutputPixelFormat { get; }
 
 		// -(void)startCaptureWithDevice:(AVCaptureDevice * _Nonnull)device format:(AVCaptureDeviceFormat * _Nonnull)format fps:(NSInteger)fps completionHandler:(void (^ _Nullable)(NSError * _Nonnull))completionHandler;
@@ -1097,6 +1129,7 @@ namespace Xam.WebRtc.iOS
 	// @interface RTCNetworkMonitor : NSObject
 	[BaseType(typeof(NSObject))]
 	[DisableDefaultCtor]
+	[Protocol]
 	interface RTCNetworkMonitor
 	{
 	}
@@ -1104,11 +1137,12 @@ namespace Xam.WebRtc.iOS
 	// @interface RTCMTLVideoView : UIView <RTCVideoRenderer>
 	[iOS(9, 0)]
 	[BaseType(typeof(UIView))]
-	interface RTCMTLVideoView : IRTCVideoRenderer
+	[Protocol]
+	interface RTCMTLVideoView : RTCVideoRenderer
 	{
 		[Wrap("WeakDelegate")]
 		[NullAllowed]
-		RTCVideoViewDelegate Delegate { get; set; }
+		IRTCVideoViewDelegate Delegate { get; set; }
 
 		// @property (nonatomic, weak) id<RTCVideoViewDelegate> _Nullable delegate;
 		[NullAllowed, Export("delegate", ArgumentSemantic.Weak)]
@@ -1153,13 +1187,13 @@ namespace Xam.WebRtc.iOS
 	}
 
 	// @interface RTCEAGLVideoView : UIView <RTCVideoRenderer>
-	[Unavailable(PlatformName.iOSAppExtension)]
+	//[Unavailable(PlatformName.iOSAppExtension)]
 	[BaseType(typeof(UIView))]
-	interface RTCEAGLVideoView : IRTCVideoRenderer
+	interface RTCEAGLVideoView : RTCVideoRenderer
 	{
 		[Wrap("WeakDelegate")]
 		[NullAllowed]
-		RTCVideoViewDelegate Delegate { get; set; }
+		IRTCVideoViewDelegate Delegate { get; set; }
 
 		// @property (nonatomic, weak) id<RTCVideoViewDelegate> _Nullable delegate;
 		[NullAllowed, Export("delegate", ArgumentSemantic.Weak)]
@@ -1168,12 +1202,12 @@ namespace Xam.WebRtc.iOS
 		// -(instancetype _Nonnull)initWithFrame:(CGRect)frame shader:(id<RTCVideoViewShading> _Nonnull)shader __attribute__((objc_designated_initializer));
 		[Export("initWithFrame:shader:")]
 		[DesignatedInitializer]
-		IntPtr Constructor(CGRect frame, RTCVideoViewShading shader);
+		IntPtr Constructor(CGRect frame, IRTCVideoViewShading shader);
 
 		// -(instancetype _Nonnull)initWithCoder:(NSCoder * _Nonnull)aDecoder shader:(id<RTCVideoViewShading> _Nonnull)shader __attribute__((objc_designated_initializer));
 		[Export("initWithCoder:shader:")]
 		[DesignatedInitializer]
-		IntPtr Constructor(NSCoder aDecoder, RTCVideoViewShading shader);
+		IntPtr Constructor(NSCoder aDecoder, IRTCVideoViewShading shader);
 
 		// @property (nonatomic) NSValue * _Nullable rotationOverride;
 		[NullAllowed, Export("rotationOverride", ArgumentSemantic.Assign)]
@@ -1182,7 +1216,7 @@ namespace Xam.WebRtc.iOS
 
 	// @interface RTCCodecSpecificInfoH264 : NSObject <RTCCodecSpecificInfo>
 	[BaseType(typeof(NSObject))]
-	interface RTCCodecSpecificInfoH264 : IRTCCodecSpecificInfo
+	interface RTCCodecSpecificInfoH264 : RTCCodecSpecificInfo
 	{
 		// @property (assign, nonatomic) RTCH264PacketizationMode packetizationMode;
 		[Export("packetizationMode", ArgumentSemantic.Assign)]
@@ -1191,49 +1225,49 @@ namespace Xam.WebRtc.iOS
 
 	// @interface RTCDefaultVideoDecoderFactory : NSObject <RTCVideoDecoderFactory>
 	[BaseType(typeof(NSObject))]
-	interface RTCDefaultVideoDecoderFactory : IRTCVideoDecoderFactory
+	interface RTCDefaultVideoDecoderFactory : RTCVideoDecoderFactory
 	{
 	}
 
 	// @interface RTCDefaultVideoEncoderFactory : NSObject <RTCVideoEncoderFactory>
 	[BaseType(typeof(NSObject))]
-	interface RTCDefaultVideoEncoderFactory : IRTCVideoEncoderFactory
+	interface RTCDefaultVideoEncoderFactory : RTCVideoEncoderFactory
 	{
 		// @property (retain, nonatomic) RTCVideoCodecInfo * _Nonnull preferredCodec;
 		[Export("preferredCodec", ArgumentSemantic.Retain)]
 		RTCVideoCodecInfo PreferredCodec { get; set; }
 
 		// +(NSArray<RTCVideoCodecInfo *> * _Nonnull)supportedCodecs;
-		[Static]
+		//[Static]
 		[Export("supportedCodecs")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		RTCVideoCodecInfo[] SupportedCodecs { get; }
 	}
 
-	[Static]
-	[Verify(ConstantsInterfaceAssociation)]
-	partial interface Constants
-	{
-		// extern NSString *const kRTCVideoCodecH264Name __attribute__((visibility("default")));
-		[Field("kRTCVideoCodecH264Name", "__Internal")]
-		NSString kRTCVideoCodecH264Name { get; }
+	//[Static]
+	//[Verify(ConstantsInterfaceAssociation)]
+	//partial interface Constants
+	//{
+	//	// extern NSString *const kRTCVideoCodecH264Name __attribute__((visibility("default")));
+	//	[Field("kRTCVideoCodecH264Name", "__Internal")]
+	//	NSString kRTCVideoCodecH264Name { get; }
 
-		// extern NSString *const kRTCLevel31ConstrainedHigh __attribute__((visibility("default")));
-		[Field("kRTCLevel31ConstrainedHigh", "__Internal")]
-		NSString kRTCLevel31ConstrainedHigh { get; }
+	//	// extern NSString *const kRTCLevel31ConstrainedHigh __attribute__((visibility("default")));
+	//	[Field("kRTCLevel31ConstrainedHigh", "__Internal")]
+	//	NSString kRTCLevel31ConstrainedHigh { get; }
 
-		// extern NSString *const kRTCLevel31ConstrainedBaseline __attribute__((visibility("default")));
-		[Field("kRTCLevel31ConstrainedBaseline", "__Internal")]
-		NSString kRTCLevel31ConstrainedBaseline { get; }
+	//	// extern NSString *const kRTCLevel31ConstrainedBaseline __attribute__((visibility("default")));
+	//	[Field("kRTCLevel31ConstrainedBaseline", "__Internal")]
+	//	NSString kRTCLevel31ConstrainedBaseline { get; }
 
-		// extern NSString *const kRTCMaxSupportedH264ProfileLevelConstrainedHigh __attribute__((visibility("default")));
-		[Field("kRTCMaxSupportedH264ProfileLevelConstrainedHigh", "__Internal")]
-		NSString kRTCMaxSupportedH264ProfileLevelConstrainedHigh { get; }
+	//	// extern NSString *const kRTCMaxSupportedH264ProfileLevelConstrainedHigh __attribute__((visibility("default")));
+	//	[Field("kRTCMaxSupportedH264ProfileLevelConstrainedHigh", "__Internal")]
+	//	NSString kRTCMaxSupportedH264ProfileLevelConstrainedHigh { get; }
 
-		// extern NSString *const kRTCMaxSupportedH264ProfileLevelConstrainedBaseline __attribute__((visibility("default")));
-		[Field("kRTCMaxSupportedH264ProfileLevelConstrainedBaseline", "__Internal")]
-		NSString kRTCMaxSupportedH264ProfileLevelConstrainedBaseline { get; }
-	}
+	//	// extern NSString *const kRTCMaxSupportedH264ProfileLevelConstrainedBaseline __attribute__((visibility("default")));
+	//	[Field("kRTCMaxSupportedH264ProfileLevelConstrainedBaseline", "__Internal")]
+	//	NSString kRTCMaxSupportedH264ProfileLevelConstrainedBaseline { get; }
+	//}
 
 	// @interface RTCH264ProfileLevelId : NSObject
 	[BaseType(typeof(NSObject))]
@@ -1274,7 +1308,7 @@ namespace Xam.WebRtc.iOS
 
 	// @interface RTCVideoEncoderFactoryH264 : NSObject <RTCVideoEncoderFactory>
 	[BaseType(typeof(NSObject))]
-	interface RTCVideoEncoderFactoryH264 : IRTCVideoEncoderFactory
+	interface RTCVideoEncoderFactoryH264 : RTCVideoEncoderFactory
 	{
 	}
 
@@ -1293,7 +1327,7 @@ namespace Xam.WebRtc.iOS
 	{
 		// @property (readonly, nonatomic) CVPixelBufferRef _Nonnull pixelBuffer;
 		[Export("pixelBuffer")]
-		unsafe CVPixelBufferRef* PixelBuffer { get; }
+		IntPtr PixelBuffer { get; }
 
 		// @property (readonly, nonatomic) int cropX;
 		[Export("cropX")]
@@ -1314,20 +1348,20 @@ namespace Xam.WebRtc.iOS
 		// +(NSSet<NSNumber *> * _Nonnull)supportedPixelFormats;
 		[Static]
 		[Export("supportedPixelFormats")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		NSSet<NSNumber> SupportedPixelFormats { get; }
 
 		// -(instancetype _Nonnull)initWithPixelBuffer:(CVPixelBufferRef _Nonnull)pixelBuffer;
 		[Export("initWithPixelBuffer:")]
-		unsafe IntPtr Constructor(CVPixelBufferRef* pixelBuffer);
+		IntPtr Constructor(ref RTCCVPixelBuffer pixelBuffer);
 
 		// -(instancetype _Nonnull)initWithPixelBuffer:(CVPixelBufferRef _Nonnull)pixelBuffer adaptedWidth:(int)adaptedWidth adaptedHeight:(int)adaptedHeight cropWidth:(int)cropWidth cropHeight:(int)cropHeight cropX:(int)cropX cropY:(int)cropY;
 		[Export("initWithPixelBuffer:adaptedWidth:adaptedHeight:cropWidth:cropHeight:cropX:cropY:")]
-		unsafe IntPtr Constructor(CVPixelBufferRef* pixelBuffer, int adaptedWidth, int adaptedHeight, int cropWidth, int cropHeight, int cropX, int cropY);
+		IntPtr Constructor(ref RTCCVPixelBuffer pixelBuffer, int adaptedWidth, int adaptedHeight, int cropWidth, int cropHeight, int cropX, int cropY);
 
 		// -(BOOL)requiresCropping;
 		[Export("requiresCropping")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		bool RequiresCropping { get; }
 
 		// -(BOOL)requiresScalingToWidth:(int)width height:(int)height;
@@ -1340,7 +1374,7 @@ namespace Xam.WebRtc.iOS
 
 		// -(BOOL)cropAndScaleTo:(CVPixelBufferRef _Nonnull)outputPixelBuffer withTempBuffer:(uint8_t * _Nullable)tmpBuffer;
 		[Export("cropAndScaleTo:withTempBuffer:")]
-		unsafe bool CropAndScaleTo(CVPixelBufferRef* outputPixelBuffer, [NullAllowed] byte* tmpBuffer);
+		bool CropAndScaleTo(IntPtr outputPixelBuffer, [NullAllowed] IntPtr tmpBuffer);
 	}
 
 	// @interface RTCCameraPreviewView : UIView
@@ -1360,7 +1394,7 @@ namespace Xam.WebRtc.iOS
 		// +(void)dispatchAsyncOnType:(RTCDispatcherQueueType)dispatchType block:(dispatch_block_t)block;
 		[Static]
 		[Export("dispatchAsyncOnType:block:")]
-		void DispatchAsyncOnType(RTCDispatcherQueueType dispatchType, dispatch_block_t block);
+		void DispatchAsyncOnType(RTCDispatcherQueueType dispatchType, NSDispatchHandler block);
 
 		// +(BOOL)isOnQueueForType:(RTCDispatcherQueueType)dispatchType;
 		[Static]
@@ -1376,13 +1410,13 @@ namespace Xam.WebRtc.iOS
 		// +(RTCDeviceType)deviceType;
 		[Static]
 		[Export("deviceType")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		RTCDeviceType DeviceType { get; }
 
 		// +(BOOL)isIOS11OrLater;
 		[Static]
 		[Export("isIOS11OrLater")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		bool IsIOS11OrLater { get; }
 	}
 
@@ -1406,18 +1440,18 @@ namespace Xam.WebRtc.iOS
 		double Volume { get; set; }
 	}
 
-	[Static]
-	[Verify(ConstantsInterfaceAssociation)]
-	partial interface Constants
-	{
-		// extern NSString *const _Nonnull kRTCMediaStreamTrackKindAudio __attribute__((visibility("default")));
-		[Field("kRTCMediaStreamTrackKindAudio", "__Internal")]
-		NSString kRTCMediaStreamTrackKindAudio { get; }
+	//[Static]
+	//[Verify(ConstantsInterfaceAssociation)]
+	//partial interface Constants
+	//{
+	//	// extern NSString *const _Nonnull kRTCMediaStreamTrackKindAudio __attribute__((visibility("default")));
+	//	[Field("kRTCMediaStreamTrackKindAudio", "__Internal")]
+	//	NSString kRTCMediaStreamTrackKindAudio { get; }
 
-		// extern NSString *const _Nonnull kRTCMediaStreamTrackKindVideo __attribute__((visibility("default")));
-		[Field("kRTCMediaStreamTrackKindVideo", "__Internal")]
-		NSString kRTCMediaStreamTrackKindVideo { get; }
-	}
+	//	// extern NSString *const _Nonnull kRTCMediaStreamTrackKindVideo __attribute__((visibility("default")));
+	//	[Field("kRTCMediaStreamTrackKindVideo", "__Internal")]
+	//	NSString kRTCMediaStreamTrackKindVideo { get; }
+	//}
 
 	// @interface RTCMediaStreamTrack : NSObject
 	[BaseType(typeof(NSObject))]
@@ -1717,7 +1751,7 @@ namespace Xam.WebRtc.iOS
 
 		[Wrap("WeakDelegate")]
 		[NullAllowed]
-		RTCDataChannelDelegate Delegate { get; set; }
+		IRTCDataChannelDelegate Delegate { get; set; }
 
 		// @property (nonatomic, weak) id<RTCDataChannelDelegate> _Nullable delegate;
 		[NullAllowed, Export("delegate", ArgumentSemantic.Weak)]
@@ -1769,50 +1803,50 @@ namespace Xam.WebRtc.iOS
 		string Protocol { get; set; }
 	}
 
-	[Static]
-	[Verify(ConstantsInterfaceAssociation)]
-	partial interface Constants
-	{
-		// extern NSString *const kRTCFieldTrialAudioSendSideBweKey __attribute__((visibility("default")));
-		[Field("kRTCFieldTrialAudioSendSideBweKey", "__Internal")]
-		NSString kRTCFieldTrialAudioSendSideBweKey { get; }
+	//[Static]
+	//[Verify(ConstantsInterfaceAssociation)]
+	//partial interface Constants
+	//{
+	//	// extern NSString *const kRTCFieldTrialAudioSendSideBweKey __attribute__((visibility("default")));
+	//	[Field("kRTCFieldTrialAudioSendSideBweKey", "__Internal")]
+	//	NSString kRTCFieldTrialAudioSendSideBweKey { get; }
 
-		// extern NSString *const kRTCFieldTrialAudioForceNoTWCCKey __attribute__((visibility("default")));
-		[Field("kRTCFieldTrialAudioForceNoTWCCKey", "__Internal")]
-		NSString kRTCFieldTrialAudioForceNoTWCCKey { get; }
+	//	// extern NSString *const kRTCFieldTrialAudioForceNoTWCCKey __attribute__((visibility("default")));
+	//	[Field("kRTCFieldTrialAudioForceNoTWCCKey", "__Internal")]
+	//	NSString kRTCFieldTrialAudioForceNoTWCCKey { get; }
 
-		// extern NSString *const kRTCFieldTrialAudioForceABWENoTWCCKey __attribute__((visibility("default")));
-		[Field("kRTCFieldTrialAudioForceABWENoTWCCKey", "__Internal")]
-		NSString kRTCFieldTrialAudioForceABWENoTWCCKey { get; }
+	//	// extern NSString *const kRTCFieldTrialAudioForceABWENoTWCCKey __attribute__((visibility("default")));
+	//	[Field("kRTCFieldTrialAudioForceABWENoTWCCKey", "__Internal")]
+	//	NSString kRTCFieldTrialAudioForceABWENoTWCCKey { get; }
 
-		// extern NSString *const kRTCFieldTrialSendSideBweWithOverheadKey __attribute__((visibility("default")));
-		[Field("kRTCFieldTrialSendSideBweWithOverheadKey", "__Internal")]
-		NSString kRTCFieldTrialSendSideBweWithOverheadKey { get; }
+	//	// extern NSString *const kRTCFieldTrialSendSideBweWithOverheadKey __attribute__((visibility("default")));
+	//	[Field("kRTCFieldTrialSendSideBweWithOverheadKey", "__Internal")]
+	//	NSString kRTCFieldTrialSendSideBweWithOverheadKey { get; }
 
-		// extern NSString *const kRTCFieldTrialFlexFec03AdvertisedKey __attribute__((visibility("default")));
-		[Field("kRTCFieldTrialFlexFec03AdvertisedKey", "__Internal")]
-		NSString kRTCFieldTrialFlexFec03AdvertisedKey { get; }
+	//	// extern NSString *const kRTCFieldTrialFlexFec03AdvertisedKey __attribute__((visibility("default")));
+	//	[Field("kRTCFieldTrialFlexFec03AdvertisedKey", "__Internal")]
+	//	NSString kRTCFieldTrialFlexFec03AdvertisedKey { get; }
 
-		// extern NSString *const kRTCFieldTrialFlexFec03Key __attribute__((visibility("default")));
-		[Field("kRTCFieldTrialFlexFec03Key", "__Internal")]
-		NSString kRTCFieldTrialFlexFec03Key { get; }
+	//	// extern NSString *const kRTCFieldTrialFlexFec03Key __attribute__((visibility("default")));
+	//	[Field("kRTCFieldTrialFlexFec03Key", "__Internal")]
+	//	NSString kRTCFieldTrialFlexFec03Key { get; }
 
-		// extern NSString *const kRTCFieldTrialH264HighProfileKey __attribute__((visibility("default")));
-		[Field("kRTCFieldTrialH264HighProfileKey", "__Internal")]
-		NSString kRTCFieldTrialH264HighProfileKey { get; }
+	//	// extern NSString *const kRTCFieldTrialH264HighProfileKey __attribute__((visibility("default")));
+	//	[Field("kRTCFieldTrialH264HighProfileKey", "__Internal")]
+	//	NSString kRTCFieldTrialH264HighProfileKey { get; }
 
-		// extern NSString *const kRTCFieldTrialMinimizeResamplingOnMobileKey __attribute__((visibility("default")));
-		[Field("kRTCFieldTrialMinimizeResamplingOnMobileKey", "__Internal")]
-		NSString kRTCFieldTrialMinimizeResamplingOnMobileKey { get; }
+	//	// extern NSString *const kRTCFieldTrialMinimizeResamplingOnMobileKey __attribute__((visibility("default")));
+	//	[Field("kRTCFieldTrialMinimizeResamplingOnMobileKey", "__Internal")]
+	//	NSString kRTCFieldTrialMinimizeResamplingOnMobileKey { get; }
 
-		// extern NSString *const kRTCFieldTrialUseNWPathMonitor __attribute__((visibility("default")));
-		[Field("kRTCFieldTrialUseNWPathMonitor", "__Internal")]
-		NSString kRTCFieldTrialUseNWPathMonitor { get; }
+	//	// extern NSString *const kRTCFieldTrialUseNWPathMonitor __attribute__((visibility("default")));
+	//	[Field("kRTCFieldTrialUseNWPathMonitor", "__Internal")]
+	//	NSString kRTCFieldTrialUseNWPathMonitor { get; }
 
-		// extern NSString *const kRTCFieldTrialEnabledValue __attribute__((visibility("default")));
-		[Field("kRTCFieldTrialEnabledValue", "__Internal")]
-		NSString kRTCFieldTrialEnabledValue { get; }
-	}
+	//	// extern NSString *const kRTCFieldTrialEnabledValue __attribute__((visibility("default")));
+	//	[Field("kRTCFieldTrialEnabledValue", "__Internal")]
+	//	NSString kRTCFieldTrialEnabledValue { get; }
+	//}
 
 	// @interface RTCIceCandidate : NSObject
 	[BaseType(typeof(NSObject))]
@@ -1903,7 +1937,7 @@ namespace Xam.WebRtc.iOS
 	// @interface RTCLegacyStatsReport : NSObject
 	[BaseType(typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface RTCLegacyStatsReport
+	interface RTCLegacyStatsReport : INativeObject
 	{
 		// @property (readonly, nonatomic) CFTimeInterval timestamp;
 		[Export("timestamp")]
@@ -1922,38 +1956,38 @@ namespace Xam.WebRtc.iOS
 		NSDictionary<NSString, NSString> Values { get; }
 	}
 
-	[Static]
-	[Verify(ConstantsInterfaceAssociation)]
-	partial interface Constants
-	{
-		// extern NSString *const _Nonnull kRTCMediaConstraintsAudioNetworkAdaptorConfig __attribute__((visibility("default")));
-		[Field("kRTCMediaConstraintsAudioNetworkAdaptorConfig", "__Internal")]
-		NSString kRTCMediaConstraintsAudioNetworkAdaptorConfig { get; }
+	//[Static]
+	//[Verify(ConstantsInterfaceAssociation)]
+	//partial interface Constants
+	//{
+	//	// extern NSString *const _Nonnull kRTCMediaConstraintsAudioNetworkAdaptorConfig __attribute__((visibility("default")));
+	//	[Field("kRTCMediaConstraintsAudioNetworkAdaptorConfig", "__Internal")]
+	//	NSString kRTCMediaConstraintsAudioNetworkAdaptorConfig { get; }
 
-		// extern NSString *const _Nonnull kRTCMediaConstraintsIceRestart __attribute__((visibility("default")));
-		[Field("kRTCMediaConstraintsIceRestart", "__Internal")]
-		NSString kRTCMediaConstraintsIceRestart { get; }
+	//	// extern NSString *const _Nonnull kRTCMediaConstraintsIceRestart __attribute__((visibility("default")));
+	//	[Field("kRTCMediaConstraintsIceRestart", "__Internal")]
+	//	NSString kRTCMediaConstraintsIceRestart { get; }
 
-		// extern NSString *const _Nonnull kRTCMediaConstraintsOfferToReceiveAudio __attribute__((visibility("default")));
-		[Field("kRTCMediaConstraintsOfferToReceiveAudio", "__Internal")]
-		NSString kRTCMediaConstraintsOfferToReceiveAudio { get; }
+	//	// extern NSString *const _Nonnull kRTCMediaConstraintsOfferToReceiveAudio __attribute__((visibility("default")));
+	//	[Field("kRTCMediaConstraintsOfferToReceiveAudio", "__Internal")]
+	//	NSString kRTCMediaConstraintsOfferToReceiveAudio { get; }
 
-		// extern NSString *const _Nonnull kRTCMediaConstraintsOfferToReceiveVideo __attribute__((visibility("default")));
-		[Field("kRTCMediaConstraintsOfferToReceiveVideo", "__Internal")]
-		NSString kRTCMediaConstraintsOfferToReceiveVideo { get; }
+	//	// extern NSString *const _Nonnull kRTCMediaConstraintsOfferToReceiveVideo __attribute__((visibility("default")));
+	//	[Field("kRTCMediaConstraintsOfferToReceiveVideo", "__Internal")]
+	//	NSString kRTCMediaConstraintsOfferToReceiveVideo { get; }
 
-		// extern NSString *const _Nonnull kRTCMediaConstraintsVoiceActivityDetection __attribute__((visibility("default")));
-		[Field("kRTCMediaConstraintsVoiceActivityDetection", "__Internal")]
-		NSString kRTCMediaConstraintsVoiceActivityDetection { get; }
+	//	// extern NSString *const _Nonnull kRTCMediaConstraintsVoiceActivityDetection __attribute__((visibility("default")));
+	//	[Field("kRTCMediaConstraintsVoiceActivityDetection", "__Internal")]
+	//	NSString kRTCMediaConstraintsVoiceActivityDetection { get; }
 
-		// extern NSString *const _Nonnull kRTCMediaConstraintsValueTrue __attribute__((visibility("default")));
-		[Field("kRTCMediaConstraintsValueTrue", "__Internal")]
-		NSString kRTCMediaConstraintsValueTrue { get; }
+	//	// extern NSString *const _Nonnull kRTCMediaConstraintsValueTrue __attribute__((visibility("default")));
+	//	[Field("kRTCMediaConstraintsValueTrue", "__Internal")]
+	//	NSString kRTCMediaConstraintsValueTrue { get; }
 
-		// extern NSString *const _Nonnull kRTCMediaConstraintsValueFalse __attribute__((visibility("default")));
-		[Field("kRTCMediaConstraintsValueFalse", "__Internal")]
-		NSString kRTCMediaConstraintsValueFalse { get; }
-	}
+	//	// extern NSString *const _Nonnull kRTCMediaConstraintsValueFalse __attribute__((visibility("default")));
+	//	[Field("kRTCMediaConstraintsValueFalse", "__Internal")]
+	//	NSString kRTCMediaConstraintsValueFalse { get; }
+	//}
 
 	// @interface RTCMediaConstraints : NSObject
 	[BaseType(typeof(NSObject))]
@@ -2026,18 +2060,18 @@ namespace Xam.WebRtc.iOS
 		NSDictionary<NSNumber, NSNumber> Samples { get; }
 	}
 
-	[Static]
-	[Verify(ConstantsInterfaceAssociation)]
-	partial interface Constants
-	{
-		// extern NSString *const _Nonnull kRTCPeerConnectionErrorDomain;
-		[Field("kRTCPeerConnectionErrorDomain", "__Internal")]
-		NSString kRTCPeerConnectionErrorDomain { get; }
+	//[Static]
+	//[Verify(ConstantsInterfaceAssociation)]
+	//partial interface Constants
+	//{
+	//	// extern NSString *const _Nonnull kRTCPeerConnectionErrorDomain;
+	//	[Field("kRTCPeerConnectionErrorDomain", "__Internal")]
+	//	NSString kRTCPeerConnectionErrorDomain { get; }
 
-		// extern const int kRTCSessionDescriptionErrorCode;
-		[Field("kRTCSessionDescriptionErrorCode", "__Internal")]
-		int kRTCSessionDescriptionErrorCode { get; }
-	}
+	//	// extern const int kRTCSessionDescriptionErrorCode;
+	//	[Field("kRTCSessionDescriptionErrorCode", "__Internal")]
+	//	int kRTCSessionDescriptionErrorCode { get; }
+	//}
 
 	// @protocol RTCPeerConnectionDelegate <NSObject>
 	[Protocol, Model(AutoGeneratedName = true)]
@@ -2047,17 +2081,17 @@ namespace Xam.WebRtc.iOS
 		// @required -(void)peerConnection:(RTCPeerConnection * _Nonnull)peerConnection didChangeSignalingState:(RTCSignalingState)stateChanged;
 		[Abstract]
 		[Export("peerConnection:didChangeSignalingState:")]
-		void PeerConnection(RTCPeerConnection peerConnection, RTCSignalingState stateChanged);
+		void PeerConnectionDidChangeSignalingState(RTCPeerConnection peerConnection, RTCSignalingState stateChanged);
 
 		// @required -(void)peerConnection:(RTCPeerConnection * _Nonnull)peerConnection didAddStream:(RTCMediaStream * _Nonnull)stream;
 		[Abstract]
 		[Export("peerConnection:didAddStream:")]
-		void PeerConnection(RTCPeerConnection peerConnection, RTCMediaStream stream);
+		void PeerConnectionDidAddStream(RTCPeerConnection peerConnection, RTCMediaStream stream);
 
 		// @required -(void)peerConnection:(RTCPeerConnection * _Nonnull)peerConnection didRemoveStream:(RTCMediaStream * _Nonnull)stream;
 		[Abstract]
 		[Export("peerConnection:didRemoveStream:")]
-		void PeerConnection(RTCPeerConnection peerConnection, RTCMediaStream stream);
+		void PeerConnectionDidRemoveStream(RTCPeerConnection peerConnection, RTCMediaStream stream);
 
 		// @required -(void)peerConnectionShouldNegotiate:(RTCPeerConnection * _Nonnull)peerConnection;
 		[Abstract]
@@ -2067,51 +2101,51 @@ namespace Xam.WebRtc.iOS
 		// @required -(void)peerConnection:(RTCPeerConnection * _Nonnull)peerConnection didChangeIceConnectionState:(RTCIceConnectionState)newState;
 		[Abstract]
 		[Export("peerConnection:didChangeIceConnectionState:")]
-		void PeerConnection(RTCPeerConnection peerConnection, RTCIceConnectionState newState);
+		void PeerConnectionDidChangeIceConnectionState(RTCPeerConnection peerConnection, RTCIceConnectionState newState);
 
 		// @required -(void)peerConnection:(RTCPeerConnection * _Nonnull)peerConnection didChangeIceGatheringState:(RTCIceGatheringState)newState;
 		[Abstract]
 		[Export("peerConnection:didChangeIceGatheringState:")]
-		void PeerConnection(RTCPeerConnection peerConnection, RTCIceGatheringState newState);
+		void PeerConnectionDidChangeIceGatheringState(RTCPeerConnection peerConnection, RTCIceGatheringState newState);
 
 		// @required -(void)peerConnection:(RTCPeerConnection * _Nonnull)peerConnection didGenerateIceCandidate:(RTCIceCandidate * _Nonnull)candidate;
 		[Abstract]
 		[Export("peerConnection:didGenerateIceCandidate:")]
-		void PeerConnection(RTCPeerConnection peerConnection, RTCIceCandidate candidate);
+		void PeerConnectionDidGenerateIceCandidate(RTCPeerConnection peerConnection, RTCIceCandidate candidate);
 
 		// @required -(void)peerConnection:(RTCPeerConnection * _Nonnull)peerConnection didRemoveIceCandidates:(NSArray<RTCIceCandidate *> * _Nonnull)candidates;
 		[Abstract]
 		[Export("peerConnection:didRemoveIceCandidates:")]
-		void PeerConnection(RTCPeerConnection peerConnection, RTCIceCandidate[] candidates);
+		void PeerConnectionDidRemoveIceCandidates(RTCPeerConnection peerConnection, RTCIceCandidate[] candidates);
 
 		// @required -(void)peerConnection:(RTCPeerConnection * _Nonnull)peerConnection didOpenDataChannel:(RTCDataChannel * _Nonnull)dataChannel;
 		[Abstract]
 		[Export("peerConnection:didOpenDataChannel:")]
-		void PeerConnection(RTCPeerConnection peerConnection, RTCDataChannel dataChannel);
+		void PeerConnectionDidOpenDataChannel(RTCPeerConnection peerConnection, RTCDataChannel dataChannel);
 
 		// @optional -(void)peerConnection:(RTCPeerConnection * _Nonnull)peerConnection didChangeStandardizedIceConnectionState:(RTCIceConnectionState)newState;
 		[Export("peerConnection:didChangeStandardizedIceConnectionState:")]
-		void PeerConnection(RTCPeerConnection peerConnection, RTCIceConnectionState newState);
+		void PeerConnectionDidChangeStandardizedIceConnectionState(RTCPeerConnection peerConnection, RTCIceConnectionState newState);
 
 		// @optional -(void)peerConnection:(RTCPeerConnection * _Nonnull)peerConnection didChangeConnectionState:(RTCPeerConnectionState)newState;
 		[Export("peerConnection:didChangeConnectionState:")]
-		void PeerConnection(RTCPeerConnection peerConnection, RTCPeerConnectionState newState);
+		void PeerConnectionDidChangeConnectionState(RTCPeerConnection peerConnection, RTCPeerConnectionState newState);
 
 		// @optional -(void)peerConnection:(RTCPeerConnection * _Nonnull)peerConnection didStartReceivingOnTransceiver:(RTCRtpTransceiver * _Nonnull)transceiver;
 		[Export("peerConnection:didStartReceivingOnTransceiver:")]
-		void PeerConnection(RTCPeerConnection peerConnection, RTCRtpTransceiver transceiver);
+		void PeerConnectionDidStartReceivingOnTransceiver(RTCPeerConnection peerConnection, IRTCRtpTransceiver transceiver);
 
 		// @optional -(void)peerConnection:(RTCPeerConnection * _Nonnull)peerConnection didAddReceiver:(RTCRtpReceiver * _Nonnull)rtpReceiver streams:(NSArray<RTCMediaStream *> * _Nonnull)mediaStreams;
 		[Export("peerConnection:didAddReceiver:streams:")]
-		void PeerConnection(RTCPeerConnection peerConnection, RTCRtpReceiver rtpReceiver, RTCMediaStream[] mediaStreams);
+		void PeerConnectionDidAddReceiver(RTCPeerConnection peerConnection, IRTCRtpReceiver rtpReceiver, RTCMediaStream[] mediaStreams);
 
 		// @optional -(void)peerConnection:(RTCPeerConnection * _Nonnull)peerConnection didRemoveReceiver:(RTCRtpReceiver * _Nonnull)rtpReceiver;
 		[Export("peerConnection:didRemoveReceiver:")]
-		void PeerConnection(RTCPeerConnection peerConnection, RTCRtpReceiver rtpReceiver);
+		void PeerConnectionDidRemoveReceiver(RTCPeerConnection peerConnection, IRTCRtpReceiver rtpReceiver);
 
 		// @optional -(void)peerConnection:(RTCPeerConnection * _Nonnull)peerConnection didChangeLocalCandidate:(RTCIceCandidate * _Nonnull)local remoteCandidate:(RTCIceCandidate * _Nonnull)remote lastReceivedMs:(int)lastDataReceivedMs changeReason:(NSString * _Nonnull)reason;
 		[Export("peerConnection:didChangeLocalCandidate:remoteCandidate:lastReceivedMs:changeReason:")]
-		void PeerConnection(RTCPeerConnection peerConnection, RTCIceCandidate local, RTCIceCandidate remote, int lastDataReceivedMs, string reason);
+		void PeerConnectionDidChangeLocalCandidate(RTCPeerConnection peerConnection, RTCIceCandidate local, RTCIceCandidate remote, int lastDataReceivedMs, string reason);
 	}
 
 	// @interface RTCPeerConnection : NSObject
@@ -2121,7 +2155,7 @@ namespace Xam.WebRtc.iOS
 	{
 		[Wrap("WeakDelegate")]
 		[NullAllowed]
-		RTCPeerConnectionDelegate Delegate { get; set; }
+		IRTCPeerConnectionDelegate Delegate { get; set; }
 
 		// @property (nonatomic, weak) id<RTCPeerConnectionDelegate> _Nullable delegate;
 		[NullAllowed, Export("delegate", ArgumentSemantic.Weak)]
@@ -2161,7 +2195,7 @@ namespace Xam.WebRtc.iOS
 
 		// @property (readonly, nonatomic) NSArray<RTCRtpSender *> * _Nonnull senders;
 		[Export("senders")]
-		RTCRtpSender[] Senders { get; }
+		IRTCRtpSender[] Senders { get; }
 
 		// @property (readonly, nonatomic) NSArray<RTCRtpReceiver *> * _Nonnull receivers;
 		[Export("receivers")]
@@ -2169,7 +2203,7 @@ namespace Xam.WebRtc.iOS
 
 		// @property (readonly, nonatomic) NSArray<RTCRtpTransceiver *> * _Nonnull transceivers;
 		[Export("transceivers")]
-		RTCRtpTransceiver[] Transceivers { get; }
+		IRTCRtpTransceiver[] Transceivers { get; }
 
 		// -(BOOL)setConfiguration:(RTCConfiguration * _Nonnull)configuration;
 		[Export("setConfiguration:")]
@@ -2197,27 +2231,27 @@ namespace Xam.WebRtc.iOS
 
 		// -(RTCRtpSender * _Nonnull)addTrack:(RTCMediaStreamTrack * _Nonnull)track streamIds:(NSArray<NSString *> * _Nonnull)streamIds;
 		[Export("addTrack:streamIds:")]
-		RTCRtpSender AddTrack(RTCMediaStreamTrack track, string[] streamIds);
+		IRTCRtpSender AddTrack(RTCMediaStreamTrack track, string[] streamIds);
 
 		// -(BOOL)removeTrack:(RTCRtpSender * _Nonnull)sender;
 		[Export("removeTrack:")]
-		bool RemoveTrack(RTCRtpSender sender);
+		bool RemoveTrack(IRTCRtpSender sender);
 
 		// -(RTCRtpTransceiver * _Nonnull)addTransceiverWithTrack:(RTCMediaStreamTrack * _Nonnull)track;
 		[Export("addTransceiverWithTrack:")]
-		RTCRtpTransceiver AddTransceiverWithTrack(RTCMediaStreamTrack track);
+		IRTCRtpTransceiver AddTransceiverWithTrack(RTCMediaStreamTrack track);
 
 		// -(RTCRtpTransceiver * _Nonnull)addTransceiverWithTrack:(RTCMediaStreamTrack * _Nonnull)track init:(RTCRtpTransceiverInit * _Nonnull)init;
 		[Export("addTransceiverWithTrack:init:")]
-		RTCRtpTransceiver AddTransceiverWithTrack(RTCMediaStreamTrack track, RTCRtpTransceiverInit init);
+		IRTCRtpTransceiver AddTransceiverWithTrack(RTCMediaStreamTrack track, RTCRtpTransceiverInit init);
 
 		// -(RTCRtpTransceiver * _Nonnull)addTransceiverOfType:(RTCRtpMediaType)mediaType;
 		[Export("addTransceiverOfType:")]
-		RTCRtpTransceiver AddTransceiverOfType(RTCRtpMediaType mediaType);
+		IRTCRtpTransceiver AddTransceiverOfType(RTCRtpMediaType mediaType);
 
 		// -(RTCRtpTransceiver * _Nonnull)addTransceiverOfType:(RTCRtpMediaType)mediaType init:(RTCRtpTransceiverInit * _Nonnull)init;
 		[Export("addTransceiverOfType:init:")]
-		RTCRtpTransceiver AddTransceiverOfType(RTCRtpMediaType mediaType, RTCRtpTransceiverInit init);
+		IRTCRtpTransceiver AddTransceiverOfType(RTCRtpMediaType mediaType, RTCRtpTransceiverInit init);
 
 		// -(void)offerForConstraints:(RTCMediaConstraints * _Nonnull)constraints completionHandler:(void (^ _Nullable)(RTCSessionDescription * _Nullable, NSError * _Nullable))completionHandler;
 		[Export("offerForConstraints:completionHandler:")]
@@ -2255,7 +2289,7 @@ namespace Xam.WebRtc.iOS
 	{
 		// -(RTCRtpSender * _Nonnull)senderWithKind:(NSString * _Nonnull)kind streamId:(NSString * _Nonnull)streamId;
 		[Export("senderWithKind:streamId:")]
-		RTCRtpSender SenderWithKind(string kind, string streamId);
+		IRTCRtpSender SenderWithKind(string kind, string streamId);
 	}
 
 	// @interface DataChannel (RTCPeerConnection)
@@ -2270,7 +2304,7 @@ namespace Xam.WebRtc.iOS
 	}
 
 	// typedef void (^RTCStatisticsCompletionHandler)(RTCStatisticsReport * _Nonnull);
-	delegate void RTCStatisticsCompletionHandler(RTCStatisticsReport arg0);
+	delegate void RTCStatisticsCompletionHandler(IRTCStatisticsReport arg0);
 
 	// @interface Stats (RTCPeerConnection)
 	[Category]
@@ -2287,11 +2321,11 @@ namespace Xam.WebRtc.iOS
 
 		// -(void)statisticsForSender:(RTCRtpSender * _Nonnull)sender completionHandler:(RTCStatisticsCompletionHandler _Nonnull)completionHandler;
 		[Export("statisticsForSender:completionHandler:")]
-		void StatisticsForSender(RTCRtpSender sender, RTCStatisticsCompletionHandler completionHandler);
+		void StatisticsForSender(IRTCRtpSender sender, RTCStatisticsCompletionHandler completionHandler);
 
 		// -(void)statisticsForReceiver:(RTCRtpReceiver * _Nonnull)receiver completionHandler:(RTCStatisticsCompletionHandler _Nonnull)completionHandler;
 		[Export("statisticsForReceiver:completionHandler:")]
-		void StatisticsForReceiver(RTCRtpReceiver receiver, RTCStatisticsCompletionHandler completionHandler);
+		void StatisticsForReceiver(IRTCRtpReceiver receiver, RTCStatisticsCompletionHandler completionHandler);
 	}
 
 	// @interface RTCPeerConnectionFactory : NSObject
@@ -2300,7 +2334,7 @@ namespace Xam.WebRtc.iOS
 	{
 		// -(instancetype _Nonnull)initWithEncoderFactory:(id<RTCVideoEncoderFactory> _Nullable)encoderFactory decoderFactory:(id<RTCVideoDecoderFactory> _Nullable)decoderFactory;
 		[Export("initWithEncoderFactory:decoderFactory:")]
-		IntPtr Constructor([NullAllowed] RTCVideoEncoderFactory encoderFactory, [NullAllowed] RTCVideoDecoderFactory decoderFactory);
+		IntPtr Constructor([NullAllowed] IRTCVideoEncoderFactory encoderFactory, [NullAllowed] IRTCVideoDecoderFactory decoderFactory);
 
 		// -(RTCAudioSource * _Nonnull)audioSourceWithConstraints:(RTCMediaConstraints * _Nullable)constraints;
 		[Export("audioSourceWithConstraints:")]
@@ -2316,7 +2350,7 @@ namespace Xam.WebRtc.iOS
 
 		// -(RTCVideoSource * _Nonnull)videoSource;
 		[Export("videoSource")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		RTCVideoSource VideoSource { get; }
 
 		// -(RTCVideoTrack * _Nonnull)videoTrackWithSource:(RTCVideoSource * _Nonnull)source trackId:(NSString * _Nonnull)trackId;
@@ -2329,7 +2363,7 @@ namespace Xam.WebRtc.iOS
 
 		// -(RTCPeerConnection * _Nonnull)peerConnectionWithConfiguration:(RTCConfiguration * _Nonnull)configuration constraints:(RTCMediaConstraints * _Nonnull)constraints delegate:(id<RTCPeerConnectionDelegate> _Nullable)delegate;
 		[Export("peerConnectionWithConfiguration:constraints:delegate:")]
-		RTCPeerConnection PeerConnectionWithConfiguration(RTCConfiguration configuration, RTCMediaConstraints constraints, [NullAllowed] RTCPeerConnectionDelegate @delegate);
+		RTCPeerConnection PeerConnectionWithConfiguration(RTCConfiguration configuration, RTCMediaConstraints constraints, [NullAllowed] IRTCPeerConnectionDelegate @delegate);
 
 		// -(void)setOptions:(RTCPeerConnectionFactoryOptions * _Nonnull)options;
 		[Export("setOptions:")]
@@ -2390,74 +2424,74 @@ namespace Xam.WebRtc.iOS
 		bool IsReducedSize { get; set; }
 	}
 
-	[Static]
-	[Verify(ConstantsInterfaceAssociation)]
-	partial interface Constants
-	{
-		// extern const NSString *const _Nonnull kRTCRtxCodecName __attribute__((visibility("default")));
-		[Field("kRTCRtxCodecName", "__Internal")]
-		NSString kRTCRtxCodecName { get; }
+	//[Static]
+	//[Verify(ConstantsInterfaceAssociation)]
+	//partial interface Constants
+	//{
+	//	// extern const NSString *const _Nonnull kRTCRtxCodecName __attribute__((visibility("default")));
+	//	[Field("kRTCRtxCodecName", "__Internal")]
+	//	NSString kRTCRtxCodecName { get; }
 
-		// extern const NSString *const _Nonnull kRTCRedCodecName __attribute__((visibility("default")));
-		[Field("kRTCRedCodecName", "__Internal")]
-		NSString kRTCRedCodecName { get; }
+	//	// extern const NSString *const _Nonnull kRTCRedCodecName __attribute__((visibility("default")));
+	//	[Field("kRTCRedCodecName", "__Internal")]
+	//	NSString kRTCRedCodecName { get; }
 
-		// extern const NSString *const _Nonnull kRTCUlpfecCodecName __attribute__((visibility("default")));
-		[Field("kRTCUlpfecCodecName", "__Internal")]
-		NSString kRTCUlpfecCodecName { get; }
+	//	// extern const NSString *const _Nonnull kRTCUlpfecCodecName __attribute__((visibility("default")));
+	//	[Field("kRTCUlpfecCodecName", "__Internal")]
+	//	NSString kRTCUlpfecCodecName { get; }
 
-		// extern const NSString *const _Nonnull kRTCFlexfecCodecName __attribute__((visibility("default")));
-		[Field("kRTCFlexfecCodecName", "__Internal")]
-		NSString kRTCFlexfecCodecName { get; }
+	//	// extern const NSString *const _Nonnull kRTCFlexfecCodecName __attribute__((visibility("default")));
+	//	[Field("kRTCFlexfecCodecName", "__Internal")]
+	//	NSString kRTCFlexfecCodecName { get; }
 
-		// extern const NSString *const _Nonnull kRTCOpusCodecName __attribute__((visibility("default")));
-		[Field("kRTCOpusCodecName", "__Internal")]
-		NSString kRTCOpusCodecName { get; }
+	//	// extern const NSString *const _Nonnull kRTCOpusCodecName __attribute__((visibility("default")));
+	//	[Field("kRTCOpusCodecName", "__Internal")]
+	//	NSString kRTCOpusCodecName { get; }
 
-		// extern const NSString *const _Nonnull kRTCIsacCodecName __attribute__((visibility("default")));
-		[Field("kRTCIsacCodecName", "__Internal")]
-		NSString kRTCIsacCodecName { get; }
+	//	// extern const NSString *const _Nonnull kRTCIsacCodecName __attribute__((visibility("default")));
+	//	[Field("kRTCIsacCodecName", "__Internal")]
+	//	NSString kRTCIsacCodecName { get; }
 
-		// extern const NSString *const _Nonnull kRTCL16CodecName __attribute__((visibility("default")));
-		[Field("kRTCL16CodecName", "__Internal")]
-		NSString kRTCL16CodecName { get; }
+	//	// extern const NSString *const _Nonnull kRTCL16CodecName __attribute__((visibility("default")));
+	//	[Field("kRTCL16CodecName", "__Internal")]
+	//	NSString kRTCL16CodecName { get; }
 
-		// extern const NSString *const _Nonnull kRTCG722CodecName __attribute__((visibility("default")));
-		[Field("kRTCG722CodecName", "__Internal")]
-		NSString kRTCG722CodecName { get; }
+	//	// extern const NSString *const _Nonnull kRTCG722CodecName __attribute__((visibility("default")));
+	//	[Field("kRTCG722CodecName", "__Internal")]
+	//	NSString kRTCG722CodecName { get; }
 
-		// extern const NSString *const _Nonnull kRTCIlbcCodecName __attribute__((visibility("default")));
-		[Field("kRTCIlbcCodecName", "__Internal")]
-		NSString kRTCIlbcCodecName { get; }
+	//	// extern const NSString *const _Nonnull kRTCIlbcCodecName __attribute__((visibility("default")));
+	//	[Field("kRTCIlbcCodecName", "__Internal")]
+	//	NSString kRTCIlbcCodecName { get; }
 
-		// extern const NSString *const _Nonnull kRTCPcmuCodecName __attribute__((visibility("default")));
-		[Field("kRTCPcmuCodecName", "__Internal")]
-		NSString kRTCPcmuCodecName { get; }
+	//	// extern const NSString *const _Nonnull kRTCPcmuCodecName __attribute__((visibility("default")));
+	//	[Field("kRTCPcmuCodecName", "__Internal")]
+	//	NSString kRTCPcmuCodecName { get; }
 
-		// extern const NSString *const _Nonnull kRTCPcmaCodecName __attribute__((visibility("default")));
-		[Field("kRTCPcmaCodecName", "__Internal")]
-		NSString kRTCPcmaCodecName { get; }
+	//	// extern const NSString *const _Nonnull kRTCPcmaCodecName __attribute__((visibility("default")));
+	//	[Field("kRTCPcmaCodecName", "__Internal")]
+	//	NSString kRTCPcmaCodecName { get; }
 
-		// extern const NSString *const _Nonnull kRTCDtmfCodecName __attribute__((visibility("default")));
-		[Field("kRTCDtmfCodecName", "__Internal")]
-		NSString kRTCDtmfCodecName { get; }
+	//	// extern const NSString *const _Nonnull kRTCDtmfCodecName __attribute__((visibility("default")));
+	//	[Field("kRTCDtmfCodecName", "__Internal")]
+	//	NSString kRTCDtmfCodecName { get; }
 
-		// extern const NSString *const _Nonnull kRTCComfortNoiseCodecName __attribute__((visibility("default")));
-		[Field("kRTCComfortNoiseCodecName", "__Internal")]
-		NSString kRTCComfortNoiseCodecName { get; }
+	//	// extern const NSString *const _Nonnull kRTCComfortNoiseCodecName __attribute__((visibility("default")));
+	//	[Field("kRTCComfortNoiseCodecName", "__Internal")]
+	//	NSString kRTCComfortNoiseCodecName { get; }
 
-		// extern const NSString *const _Nonnull kRTCVp8CodecName __attribute__((visibility("default")));
-		[Field("kRTCVp8CodecName", "__Internal")]
-		NSString kRTCVp8CodecName { get; }
+	//	// extern const NSString *const _Nonnull kRTCVp8CodecName __attribute__((visibility("default")));
+	//	[Field("kRTCVp8CodecName", "__Internal")]
+	//	NSString kRTCVp8CodecName { get; }
 
-		// extern const NSString *const _Nonnull kRTCVp9CodecName __attribute__((visibility("default")));
-		[Field("kRTCVp9CodecName", "__Internal")]
-		NSString kRTCVp9CodecName { get; }
+	//	// extern const NSString *const _Nonnull kRTCVp9CodecName __attribute__((visibility("default")));
+	//	[Field("kRTCVp9CodecName", "__Internal")]
+	//	NSString kRTCVp9CodecName { get; }
 
-		// extern const NSString *const _Nonnull kRTCH264CodecName __attribute__((visibility("default")));
-		[Field("kRTCH264CodecName", "__Internal")]
-		NSString kRTCH264CodecName { get; }
-	}
+	//	// extern const NSString *const _Nonnull kRTCH264CodecName __attribute__((visibility("default")));
+	//	[Field("kRTCH264CodecName", "__Internal")]
+	//	NSString kRTCH264CodecName { get; }
+	//}
 
 	// @interface RTCRtpCodecParameters : NSObject
 	[BaseType(typeof(NSObject))]
@@ -2587,7 +2621,7 @@ namespace Xam.WebRtc.iOS
 		// @required -(void)rtpReceiver:(RTCRtpReceiver * _Nonnull)rtpReceiver didReceiveFirstPacketForMediaType:(RTCRtpMediaType)mediaType;
 		[Abstract]
 		[Export("rtpReceiver:didReceiveFirstPacketForMediaType:")]
-		void DidReceiveFirstPacketForMediaType(RTCRtpReceiver rtpReceiver, RTCRtpMediaType mediaType);
+		void DidReceiveFirstPacketForMediaType(IRTCRtpReceiver rtpReceiver, RTCRtpMediaType mediaType);
 	}
 
 	// @protocol RTCRtpReceiver <NSObject>
@@ -2619,9 +2653,9 @@ namespace Xam.WebRtc.iOS
 		[NullAllowed, Export("track")]
 		RTCMediaStreamTrack Track { get; }
 
-		[Wrap("WeakDelegate"), Abstract]
+		[Wrap("WeakDelegate")]
 		[NullAllowed]
-		RTCRtpReceiverDelegate Delegate { get; set; }
+		IRTCRtpReceiverDelegate Delegate { get; set; }
 
 		// @required @property (nonatomic, weak) id<RTCRtpReceiverDelegate> _Nullable delegate;
 		[Abstract]
@@ -2630,11 +2664,11 @@ namespace Xam.WebRtc.iOS
 	}
 
 	// @interface RTCRtpReceiver : NSObject <RTCRtpReceiver>
-	[BaseType(typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface RTCRtpReceiver : IRTCRtpReceiver
-	{
-	}
+	//[BaseType(typeof(NSObject))]
+	//[DisableDefaultCtor]
+	//interface RTCRtpReceiver : IRTCRtpReceiver
+	//{
+	//}
 
 	// @protocol RTCDtmfSender <NSObject>
 	/*
@@ -2658,24 +2692,24 @@ namespace Xam.WebRtc.iOS
 		// @required -(BOOL)insertDtmf:(NSString * _Nonnull)tones duration:(NSTimeInterval)duration interToneGap:(NSTimeInterval)interToneGap;
 		[Abstract]
 		[Export("insertDtmf:duration:interToneGap:")]
-		bool Duration(string tones, double duration, double interToneGap);
+		bool InsertDtmf(string tones, double duration, double interToneGap);
 
 		// @required -(NSString * _Nonnull)remainingTones;
 		[Abstract]
 		[Export("remainingTones")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		string RemainingTones { get; }
 
 		// @required -(NSTimeInterval)duration;
 		[Abstract]
 		[Export("duration")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		double Duration { get; }
 
 		// @required -(NSTimeInterval)interToneGap;
 		[Abstract]
 		[Export("interToneGap")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		double InterToneGap { get; }
 	}
 
@@ -2716,24 +2750,24 @@ namespace Xam.WebRtc.iOS
 		// @required @property (readonly, nonatomic) id<RTCDtmfSender> _Nullable dtmfSender;
 		[Abstract]
 		[NullAllowed, Export("dtmfSender")]
-		RTCDtmfSender DtmfSender { get; }
+		IRTCDtmfSender DtmfSender { get; }
 	}
 
 	// @interface RTCRtpSender : NSObject <RTCRtpSender>
-	[BaseType(typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface RTCRtpSender : IRTCRtpSender
-	{
-	}
+	//[BaseType(typeof(NSObject))]
+	//[DisableDefaultCtor]
+	//interface RTCRtpSender : IRTCRtpSender
+	//{
+	//}
 
-	[Static]
-	[Verify(ConstantsInterfaceAssociation)]
-	partial interface Constants
-	{
-		// extern NSString *const _Nonnull kRTCRtpTransceiverErrorDomain;
-		[Field("kRTCRtpTransceiverErrorDomain", "__Internal")]
-		NSString kRTCRtpTransceiverErrorDomain { get; }
-	}
+	//[Static]
+	//[Verify(ConstantsInterfaceAssociation)]
+	//partial interface Constants
+	//{
+	//	// extern NSString *const _Nonnull kRTCRtpTransceiverErrorDomain;
+	//	[Field("kRTCRtpTransceiverErrorDomain", "__Internal")]
+	//	NSString kRTCRtpTransceiverErrorDomain { get; }
+	//}
 
 	// @interface RTCRtpTransceiverInit : NSObject
 	[BaseType(typeof(NSObject))]
@@ -2779,12 +2813,12 @@ namespace Xam.WebRtc.iOS
 		// @required @property (readonly, nonatomic) RTCRtpSender * _Nonnull sender;
 		[Abstract]
 		[Export("sender")]
-		RTCRtpSender Sender { get; }
+		IRTCRtpSender Sender { get; }
 
 		// @required @property (readonly, nonatomic) RTCRtpReceiver * _Nonnull receiver;
 		[Abstract]
 		[Export("receiver")]
-		RTCRtpReceiver Receiver { get; }
+		IRTCRtpReceiver Receiver { get; }
 
 		// @required @property (readonly, nonatomic) BOOL isStopped;
 		[Abstract]
@@ -2799,7 +2833,7 @@ namespace Xam.WebRtc.iOS
 		// @required -(BOOL)currentDirection:(RTCRtpTransceiverDirection * _Nonnull)currentDirectionOut;
 		[Abstract]
 		[Export("currentDirection:")]
-		unsafe bool CurrentDirection(RTCRtpTransceiverDirection* currentDirectionOut);
+		bool CurrentDirection(IntPtr currentDirectionOut);
 
 		// @required -(void)stopInternal;
 		[Abstract]
@@ -2813,11 +2847,11 @@ namespace Xam.WebRtc.iOS
 	}
 
 	// @interface RTCRtpTransceiver : NSObject <RTCRtpTransceiver>
-	[BaseType(typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface RTCRtpTransceiver : IRTCRtpTransceiver
-	{
-	}
+	//[BaseType(typeof(NSObject))]
+	//[DisableDefaultCtor]
+	//interface RTCRtpTransceiver : IRTCRtpTransceiver
+	//{
+	//}
 
 	// @interface RTCSessionDescription : NSObject
 	[BaseType(typeof(NSObject))]
@@ -2851,6 +2885,7 @@ namespace Xam.WebRtc.iOS
 	// @interface RTCStatisticsReport : NSObject
 	[BaseType(typeof(NSObject))]
 	[DisableDefaultCtor]
+	[Protocol]
 	interface RTCStatisticsReport
 	{
 		// @property (readonly, nonatomic) CFTimeInterval timestamp_us;
@@ -2865,7 +2900,8 @@ namespace Xam.WebRtc.iOS
 	// @interface RTCStatistics : NSObject
 	[BaseType(typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface RTCStatistics
+	[Protocol]
+	interface RTCStatistics : INativeObject
 	{
 		// @property (readonly, nonatomic) NSString * _Nonnull id;
 		[Export("id")]
@@ -2887,7 +2923,7 @@ namespace Xam.WebRtc.iOS
 	// @interface RTCVideoSource : RTCMediaSource <RTCVideoCapturerDelegate>
 	[BaseType(typeof(RTCMediaSource))]
 	[DisableDefaultCtor]
-	interface RTCVideoSource : IRTCVideoCapturerDelegate
+	interface RTCVideoSource : RTCVideoCapturerDelegate
 	{
 		// -(void)adaptOutputFormatToWidth:(int)width height:(int)height fps:(int)fps;
 		[Export("adaptOutputFormatToWidth:height:fps:")]
@@ -2905,25 +2941,25 @@ namespace Xam.WebRtc.iOS
 
 		// -(void)addRenderer:(id<RTCVideoRenderer> _Nonnull)renderer;
 		[Export("addRenderer:")]
-		void AddRenderer(RTCVideoRenderer renderer);
+		void AddRenderer(IRTCVideoRenderer renderer);
 
 		// -(void)removeRenderer:(id<RTCVideoRenderer> _Nonnull)renderer;
 		[Export("removeRenderer:")]
-		void RemoveRenderer(RTCVideoRenderer renderer);
+		void RemoveRenderer(IRTCVideoRenderer renderer);
 	}
 
-	[Static]
-	[Verify(ConstantsInterfaceAssociation)]
-	partial interface Constants
-	{
-		// extern NSString *const kRTCVideoCodecVp8Name __attribute__((visibility("default")));
-		[Field("kRTCVideoCodecVp8Name", "__Internal")]
-		NSString kRTCVideoCodecVp8Name { get; }
+	//[Static]
+	//[Verify(ConstantsInterfaceAssociation)]
+	//partial interface Constants
+	//{
+	//	// extern NSString *const kRTCVideoCodecVp8Name __attribute__((visibility("default")));
+	//	[Field("kRTCVideoCodecVp8Name", "__Internal")]
+	//	NSString kRTCVideoCodecVp8Name { get; }
 
-		// extern NSString *const kRTCVideoCodecVp9Name __attribute__((visibility("default")));
-		[Field("kRTCVideoCodecVp9Name", "__Internal")]
-		NSString kRTCVideoCodecVp9Name { get; }
-	}
+	//	// extern NSString *const kRTCVideoCodecVp9Name __attribute__((visibility("default")));
+	//	[Field("kRTCVideoCodecVp9Name", "__Internal")]
+	//	NSString kRTCVideoCodecVp9Name { get; }
+	//}
 
 	// @interface RTCVideoDecoderVP8 : NSObject
 	[BaseType(typeof(NSObject))]
@@ -2932,8 +2968,8 @@ namespace Xam.WebRtc.iOS
 		// +(id<RTCVideoDecoder>)vp8Decoder;
 		[Static]
 		[Export("vp8Decoder")]
-		[Verify(MethodToProperty)]
-		RTCVideoDecoder Vp8Decoder { get; }
+		//[Verify(MethodToProperty)]
+		IRTCVideoDecoder Vp8Decoder { get; }
 	}
 
 	// @interface RTCVideoDecoderVP9 : NSObject
@@ -2943,8 +2979,8 @@ namespace Xam.WebRtc.iOS
 		// +(id<RTCVideoDecoder>)vp9Decoder;
 		[Static]
 		[Export("vp9Decoder")]
-		[Verify(MethodToProperty)]
-		RTCVideoDecoder Vp9Decoder { get; }
+		//[Verify(MethodToProperty)]
+		IRTCVideoDecoder Vp9Decoder { get; }
 	}
 
 	// @interface RTCVideoEncoderVP8 : NSObject
@@ -2954,8 +2990,8 @@ namespace Xam.WebRtc.iOS
 		// +(id<RTCVideoEncoder>)vp8Encoder;
 		[Static]
 		[Export("vp8Encoder")]
-		[Verify(MethodToProperty)]
-		RTCVideoEncoder Vp8Encoder { get; }
+		//[Verify(MethodToProperty)]
+		IRTCVideoEncoder Vp8Encoder { get; }
 	}
 
 	// @interface RTCVideoEncoderVP9 : NSObject
@@ -2965,21 +3001,21 @@ namespace Xam.WebRtc.iOS
 		// +(id<RTCVideoEncoder>)vp9Encoder;
 		[Static]
 		[Export("vp9Encoder")]
-		[Verify(MethodToProperty)]
-		RTCVideoEncoder Vp9Encoder { get; }
+		//[Verify(MethodToProperty)]
+		IRTCVideoEncoder Vp9Encoder { get; }
 	}
 
 	// @interface RTCI420Buffer : NSObject <RTCI420Buffer>
-	[BaseType(typeof(NSObject))]
-	interface RTCI420Buffer : IRTCI420Buffer
-	{
-	}
+	//[BaseType(typeof(NSObject))]
+	//interface RTCI420Buffer : IRTCI420Buffer
+	//{
+	//}
 
 	// @interface RTCMutableI420Buffer : RTCI420Buffer <RTCMutableI420Buffer>
-	[BaseType(typeof(RTCI420Buffer))]
-	interface RTCMutableI420Buffer : IRTCMutableI420Buffer
-	{
-	}
+	//[BaseType(typeof(RTCI420Buffer))]
+	//interface RTCMutableI420Buffer : IRTCMutableI420Buffer
+	//{
+	//}
 
 	// typedef void (^RTCCallbackLoggerMessageHandler)(NSString * _Nonnull);
 	delegate void RTCCallbackLoggerMessageHandler(string arg0);
@@ -3043,7 +3079,7 @@ namespace Xam.WebRtc.iOS
 
 		// -(NSData * _Nullable)logData;
 		[NullAllowed, Export("logData")]
-		[Verify(MethodToProperty)]
+		//[Verify(MethodToProperty)]
 		NSData LogData { get; }
 	}
 }
