@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>Xam.WebRtc.Android</id>
-    <version>1.0.30039</version>
+    <version>1.0.32006</version>
     <title>Xamarin.Android bindings for WebRTC</title>
     <summary>Xamarin.Android bindings for WebRTC</summary>
     <authors>dmariogatto</authors>
@@ -17,6 +17,7 @@
     <copyright>© Google and Daniel Gatto</copyright>
     <tags>Xamarin.Android Google WebRTC Xamarin Android</tags>
     <repository type="git" url="https://github.com/dmariogatto/xamarin-webrtc" />
+    <releaseNotes>- Updated to GoogleWebRTC 1.0.32006</releaseNotes>
     <dependencies>
       <group targetFramework="MonoAndroid7.0" />
       <group targetFramework="MonoAndroid7.1" />
