@@ -395,12 +395,12 @@ namespace WebRtc.iOS.Code
         #endregion
 
         #region IRTCPeerConnectionDelegate
-        public void PeerConnection(RTCPeerConnection peerConnection, RTCSignalingState stateChanged)
+        public void PeerConnectionDidChangeSignalingState(RTCPeerConnection peerConnection, RTCSignalingState stateChanged)
         {
             System.Diagnostics.Debug.WriteLine($"{nameof(RTCSignalingState)} changed {stateChanged}");
         }
 
-        public void PeerConnection(RTCPeerConnection peerConnection, RTCIceConnectionState newState)
+        public void PeerConnectionDidChangeIceConnectionState(RTCPeerConnection peerConnection, RTCIceConnectionState newState)
         {
             System.Diagnostics.Debug.WriteLine($"{nameof(RTCIceConnectionState)} changed {newState}");
 
@@ -438,25 +438,25 @@ namespace WebRtc.iOS.Code
             });
         }
 
-        public void PeerConnection(RTCPeerConnection peerConnection, RTCIceGatheringState newState)
+        public void PeerConnectionDidChangeIceGatheringState(RTCPeerConnection peerConnection, RTCIceGatheringState newState)
         {
             System.Diagnostics.Debug.WriteLine($"{nameof(RTCIceGatheringState)} changed {newState}");
         }
 
-        public void PeerConnection(RTCPeerConnection peerConnection, RTCIceCandidate candidate)
+        public void PeerConnectionDidGenerateIceCandidate(RTCPeerConnection peerConnection, RTCIceCandidate candidate)
         {
-            System.Diagnostics.Debug.WriteLine($"PeerConnectionIceCandiate");
+            System.Diagnostics.Debug.WriteLine(nameof(PeerConnectionDidGenerateIceCandidate));
             Delegate?.DidGenerateCandiate(candidate);
         }
 
-        public void PeerConnection(RTCPeerConnection peerConnection, RTCIceCandidate[] candidates)
+        public void PeerConnectionDidRemoveIceCandidates(RTCPeerConnection peerConnection, RTCIceCandidate[] candidates)
         {
-            System.Diagnostics.Debug.WriteLine($"PeerConnectionIceCandiates");
+            System.Diagnostics.Debug.WriteLine(nameof(PeerConnectionDidRemoveIceCandidates));
         }
 
-        public void PeerConnection(RTCPeerConnection peerConnection, RTCDataChannel dataChannel)
+        public void PeerConnectionDidOpenDataChannel(RTCPeerConnection peerConnection, RTCDataChannel dataChannel)
         {
-            System.Diagnostics.Debug.WriteLine($"PeerConnectionDidOpenDataChannel");
+            System.Diagnostics.Debug.WriteLine(nameof(PeerConnectionDidOpenDataChannel));
             Delegate?.DidOpenDataChannel();
 
             _dataChannel?.Close();
