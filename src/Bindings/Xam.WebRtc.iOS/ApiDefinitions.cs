@@ -86,11 +86,11 @@ namespace Xam.WebRtc.iOS
 
 		// -(instancetype _Nonnull)initWithPixelBuffer:(CVPixelBufferRef _Nonnull)pixelBuffer rotation:(RTCVideoRotation)rotation timeStampNs:(int64_t)timeStampNs __attribute__((deprecated("use initWithBuffer instead")));
 		[Export("initWithPixelBuffer:rotation:timeStampNs:")]
-		unsafe IntPtr Constructor(ref CVPixelBuffer pixelBuffer, RTCVideoRotation rotation, long timeStampNs);
+		IntPtr Constructor(CVPixelBuffer pixelBuffer, RTCVideoRotation rotation, long timeStampNs);
 
 		// -(instancetype _Nonnull)initWithPixelBuffer:(CVPixelBufferRef _Nonnull)pixelBuffer scaledWidth:(int)scaledWidth scaledHeight:(int)scaledHeight cropWidth:(int)cropWidth cropHeight:(int)cropHeight cropX:(int)cropX cropY:(int)cropY rotation:(RTCVideoRotation)rotation timeStampNs:(int64_t)timeStampNs __attribute__((deprecated("use initWithBuffer instead")));
 		[Export("initWithPixelBuffer:scaledWidth:scaledHeight:cropWidth:cropHeight:cropX:cropY:rotation:timeStampNs:")]
-		unsafe IntPtr Constructor(ref CVPixelBuffer pixelBuffer, int scaledWidth, int scaledHeight, int cropWidth, int cropHeight, int cropX, int cropY, RTCVideoRotation rotation, long timeStampNs);
+		IntPtr Constructor(CVPixelBuffer pixelBuffer, int scaledWidth, int scaledHeight, int cropWidth, int cropHeight, int cropX, int cropY, RTCVideoRotation rotation, long timeStampNs);
 
 		// -(instancetype _Nonnull)initWithBuffer:(id<RTCVideoFrameBuffer> _Nonnull)frameBuffer rotation:(RTCVideoRotation)rotation timeStampNs:(int64_t)timeStampNs;
 		[Export("initWithBuffer:rotation:timeStampNs:")]
@@ -1323,7 +1323,7 @@ namespace Xam.WebRtc.iOS
 
 	// @interface RTCCVPixelBuffer : NSObject <RTCVideoFrameBuffer>
 	[BaseType(typeof(NSObject))]
-	interface RTCCVPixelBuffer : IRTCVideoFrameBuffer
+	interface RTCCVPixelBuffer : RTCVideoFrameBuffer
 	{
 		// @property (readonly, nonatomic) CVPixelBufferRef _Nonnull pixelBuffer;
 		[Export("pixelBuffer")]
@@ -1353,11 +1353,11 @@ namespace Xam.WebRtc.iOS
 
 		// -(instancetype _Nonnull)initWithPixelBuffer:(CVPixelBufferRef _Nonnull)pixelBuffer;
 		[Export("initWithPixelBuffer:")]
-		IntPtr Constructor(ref RTCCVPixelBuffer pixelBuffer);
+		IntPtr Constructor(RTCCVPixelBuffer pixelBuffer);
 
 		// -(instancetype _Nonnull)initWithPixelBuffer:(CVPixelBufferRef _Nonnull)pixelBuffer adaptedWidth:(int)adaptedWidth adaptedHeight:(int)adaptedHeight cropWidth:(int)cropWidth cropHeight:(int)cropHeight cropX:(int)cropX cropY:(int)cropY;
 		[Export("initWithPixelBuffer:adaptedWidth:adaptedHeight:cropWidth:cropHeight:cropX:cropY:")]
-		IntPtr Constructor(ref RTCCVPixelBuffer pixelBuffer, int adaptedWidth, int adaptedHeight, int cropWidth, int cropHeight, int cropX, int cropY);
+		IntPtr Constructor(RTCCVPixelBuffer pixelBuffer, int adaptedWidth, int adaptedHeight, int cropWidth, int cropHeight, int cropX, int cropY);
 
 		// -(BOOL)requiresCropping;
 		[Export("requiresCropping")]
