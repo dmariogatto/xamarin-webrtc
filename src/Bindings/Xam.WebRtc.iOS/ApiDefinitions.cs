@@ -6,6 +6,8 @@ using Foundation;
 using ObjCRuntime;
 using UIKit;
 
+// sharpie bind -sdk iphoneos -output ./Xam.WebRtc.iOS -namespace Xam.WebRtc.iOS -scope ./WebRTC.framework/Headers ./WebRTC.framework/Headers/WebRTC.h
+
 namespace Xam.WebRtc.iOS
 {
 	delegate void NSDispatchHandler();
