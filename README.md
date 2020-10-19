@@ -28,6 +28,7 @@ Included are simple demo apps for both Android and iOS, as well as, a basic broa
  
 ## Resources
 
+- [Blog Post](https://dgatto.com/posts/2020/10/xam-webrtc-binding-ios/)
 - https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Connectivity
 - https://github.com/tkmn0/SimpleWebRTCExample_iOS
 - https://github.com/amrfarid140/webrtc-android-codelab
