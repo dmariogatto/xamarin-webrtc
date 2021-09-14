@@ -41,9 +41,9 @@ namespace WebRtc.Android.Code
         private readonly object _connectionLock = new object();
         private PeerConnection _peerConnection;
         private DataChannel _dataChannel;
-        
+
         private (PeerConnection peer, DataChannel data) _connection
-        { 
+        {
             get
             {
                 if (_peerConnection == null)
@@ -147,9 +147,9 @@ namespace WebRtc.Android.Code
             {
                 // https://bugs.chromium.org/p/webrtc/issues/detail?id=6924
                 Task.Run(() =>
-                {                   
+                {
                     lock (_peerConnection)
-                    { 
+                    {
                         if (_peerConnection != null)
                         {
                             _dataChannel?.Close();
@@ -183,13 +183,13 @@ namespace WebRtc.Android.Code
                             {
                                 completionHandler(null, err);
                             }),
-                            answerSdp);                            
+                            answerSdp);
                         },
                         (err) =>
                         {
                             completionHandler(null, err);
                         }),
-                        mediaConstraints);                    
+                        mediaConstraints);
                 },
                 (err) =>
                 {
@@ -374,7 +374,7 @@ namespace WebRtc.Android.Code
                 MainThread.BeginInvokeOnMainThread(() => _observer?.OnReceiveData(bytes));
             }
             else
-            {                
+            {
                 var msg = Encoding.UTF8.GetString(bytes);
                 MainThread.BeginInvokeOnMainThread(() => _observer?.OnReceiveMessage(msg));
             }
@@ -383,6 +383,21 @@ namespace WebRtc.Android.Code
         public void OnStateChange()
         {
             System.Diagnostics.Debug.WriteLine($"{nameof(OnStateChange)}");
+        }
+
+        public void OnConnectionChange(PeerConnection.PeerConnectionState newState)
+        {
+            System.Diagnostics.Debug.WriteLine($"{nameof(OnConnectionChange)}:{newState}");
+        }
+
+        public void OnSelectedCandidatePairChanged(CandidatePairChangeEvent e)
+        {
+            System.Diagnostics.Debug.WriteLine($"{nameof(OnSelectedCandidatePairChanged)}:{e.Reason}");
+        }
+
+        public void OnTrack(RtpTransceiver transceiver)
+        {
+            System.Diagnostics.Debug.WriteLine($"{nameof(OnTrack)}:{transceiver.MediaType}");
         }
         #endregion
     }

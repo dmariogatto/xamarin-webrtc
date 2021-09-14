@@ -24,7 +24,7 @@ namespace WebRtc.Android
     public class MainActivity : AppCompatActivity, IWebRtcObserver
     {
         private IWebSocket _socket;
-        
+
         private WebRtcClient _webRtcClient;
         private SurfaceViewRenderer _remoteView;
         private SurfaceViewRenderer _localView;
@@ -37,10 +37,10 @@ namespace WebRtc.Android
             SetContentView(Resource.Layout.activity_main);
 
             var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
-            SetSupportActionBar(toolbar);           
+            SetSupportActionBar(toolbar);
 
             var connectButton = FindViewById<Button>(Resource.Id.connect_button);
-            connectButton.Click += ConnectButton;            
+            connectButton.Click += ConnectButton;
             var disconnectButton = FindViewById<Button>(Resource.Id.disconnect_button);
             disconnectButton.Click += DisconnectButton;
 
@@ -71,7 +71,7 @@ namespace WebRtc.Android
             var linearLayout = new LinearLayout(this);
             linearLayout.Orientation = Orientation.Vertical;
             linearLayout.SetPadding(48, 24, 48, 24);
-            var ipAddr = new EditText(this) { Hint = "IP Address", Text = "192.168.1.119" };
+            var ipAddr = new EditText(this) { Hint = "IP Address", Text = "10.0.2.2" };
             var port = new EditText(this) { Hint = "Port", Text = "8080" };
             linearLayout.AddView(ipAddr);
             linearLayout.AddView(port);
@@ -144,7 +144,7 @@ namespace WebRtc.Android
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-        
+
         private void SendViaSocket(SignalingMessage msg)
         {
             var json = JsonConvert.SerializeObject(msg);
@@ -187,7 +187,7 @@ namespace WebRtc.Android
                 _webRtcClient.ReceiveCandidate(new IceCandidate(
                     msg.Candidate.SdpMid,
                     msg.Candidate.SdpMLineIndex,
-                    msg.Candidate.Sdp));                
+                    msg.Candidate.Sdp));
             }
         }
 
