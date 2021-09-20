@@ -17,7 +17,12 @@
     <copyright>© Google and Daniel Gatto</copyright>
     <tags>Xamarin.Android Google WebRTC Xamarin Android</tags>
     <repository type="git" url="https://github.com/dmariogatto/xamarin-webrtc" />
-    <releaseNotes>- Updated to GoogleWebRTC 1.0.32006</releaseNotes>
+    <releaseNotes>Added missing interface methods for "PeerConnection.IObserver",
+
+- OnConnectionChange
+- OnSelectedCandidatePairChanged
+- OnTrack
+    </releaseNotes>
     <dependencies>
       <group targetFramework="MonoAndroid7.0" />
       <group targetFramework="MonoAndroid7.1" />
